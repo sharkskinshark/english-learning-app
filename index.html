@@ -1,0 +1,182 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#2b8cf3" />
+  <title>Cambridge Vocabulary Practice</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Cambridge Vocabulary Practice</h1>
+    <h2>Improve your Listening, Spelling and Understanding</h2>
+
+    <section class="controls">
+      <label>Mode:
+        <select id="modeSelect">
+          <option value="spelling">Spelling (type the word)</option>
+          <option value="meaning">Meaning (pick the right meaning)</option>
+          <option value="phonics">Phonics Helper</option>
+        </select>
+      </label>
+
+      <label>Mode:
+        <select id="practiceMode">
+          <option value="learn">Learn New Words</option>
+          <option value="review">Review Mode</option>
+        </select>
+      </label>
+
+      <div id="learnControls">
+        <label>Level:
+          <select id="levelSelect">
+            <option value="starters">Starters (Beginner)</option>
+            <option value="movers">Movers (Elementary)</option>
+            <option value="flyers">Flyers (Pre-Intermediate)</option>
+          </select>
+        </label>
+
+        <label>Category:
+          <select id="categorySelect"><option value="">Loading categories...</option></select>
+        </label>
+      </div>
+
+      <button id="startBtn">Start Practice</button>
+      <div id="loadingMessage">Loading vocabulary...</div>
+      <button id="listenBtn" style="display:none">🔊 Listen to Word</button>
+      
+      <div id="reviewStats" class="review-stats hidden">
+        <span>Words to Review: <span id="reviewCount">0</span></span>
+        <span>Mastered: <span id="masteredCount">0</span></span>
+      </div>
+    </section>
+
+    <section id="exercise" class="exercise hidden">
+      <div id="progress" class="progress">0 / 0</div>
+      <div id="prompt" class="prompt">Press Start to begin</div>
+
+      <div id="spellingArea" class="mode-area">
+        <div class="listen-spell">
+          <button id="listenWordBtn" class="icon-btn">🔊 Listen to Word</button>
+          <input id="spellingInput" placeholder="Type what you hear..." autocomplete="off">
+          <button id="submitSpelling" class="btn">Check Answer</button>
+        </div>
+        <div id="spellingResult" class="hidden">
+          <p id="resultMessage"></p>
+          <div id="correctAnswer" class="hidden">
+            <p>Correct spelling: <span id="correctSpelling"></span></p>
+            <div id="wordImage" class="word-image"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="meaningArea" class="mode-area hidden">
+        <div class="word-row">
+          <span id="wordDisplay"></span>
+          <button id="pronounceBtn" class="icon-btn" title="Listen to pronunciation">🔊</button>
+        </div>
+        <div id="choices" class="choices"></div>
+      </div>
+
+      <div id="phonicsArea" class="mode-area hidden">
+        <div class="word-row">
+          <span id="phonicsWordDisplay" class="word-display"></span>
+          <button id="phonicsPronounceBtn" class="icon-btn" title="Listen to pronunciation">🔊</button>
+        </div>
+        <div id="phonicsHelperContainer"></div>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+      <div class="controls-row">
+        <button id="nextBtn" class="hidden">Next</button>
+        <button id="restartBtn" class="hidden">Restart</button>
+      </div>
+
+      <div id="score" class="score hidden">Score: 0</div>
+    </section>
+
+    <section id="eventSection" class="event-section hidden">
+      <h2 id="eventTitle">Special Event 🎉</h2>
+      <div class="event-content">
+        <div id="eventWords" class="event-words"></div>
+        <div id="eventChallenges" class="event-challenges"></div>
+      </div>
+    </section>
+
+    <section id="dailySection" class="daily-section">
+      <h2>Daily Challenges 📅</h2>
+      <div class="daily-streak">
+        <span>Streak: <span id="currentStreak">0</span> days</span>
+        <span>Best: <span id="bestStreak">0</span> days</span>
+      </div>
+      <div id="dailyChallenges" class="daily-challenges"></div>
+    </section>
+
+    <section id="calendarSection" class="calendar-section">
+      <h2>Practice Calendar 📆</h2>
+      <div id="calendarView" class="calendar-view"></div>
+    </section>
+
+    <section id="leaderboardsSection" class="leaderboards-section">
+      <h2>Leaderboards 🏆</h2>
+      <div class="username-area">
+        <input type="text" id="usernameInput" placeholder="Enter your name" maxlength="20">
+        <button id="saveUsername">Save Name</button>
+      </div>
+      <div id="leaderboardsContent" class="leaderboards-content"></div>
+    </section>
+
+    <section id="progressSection" class="progress-section hidden">
+      <h2>Your Progress & Achievements 🏆</h2>
+      <div class="progress-grid">
+        <div class="progress-card" data-level="starters">
+          <h3>Starters 🌱</h3>
+          <div class="progress-details"></div>
+        </div>
+        <div class="progress-card" data-level="movers">
+          <h3>Movers 🚶</h3>
+          <div class="progress-details"></div>
+        </div>
+        <div class="progress-card" data-level="flyers">
+          <h3>Flyers 🦋</h3>
+          <div class="progress-details"></div>
+        </div>
+      </div>
+
+      <div class="achievements-section">
+        <h3>Your Achievements</h3>
+        <div class="achievements-grid" id="achievementsGrid"></div>
+      </div>
+      
+      <button id="showProgress">Show Progress</button>
+    </section>
+
+    <footer class="notes">
+      For elementary kids: Start with Starters level. Encourage spelling slowly.
+      <div class="reset-section">
+        <button id="resetAppBtn" class="reset-btn">🔄 Reset App</button>
+      </div>
+    </footer>
+  </main>
+
+  <script src="achievements.js?v=3"></script>
+  <script src="review.js?v=3"></script>
+  <script src="daily.js?v=3"></script>
+  <script src="events.js?v=3"></script>
+  <script src="app.js?v=3"></script>
+  <script src="calendar.js?v=3"></script>
+  <script src="leaderboard.js?v=3"></script>
+
+  <!-- Achievement notification template -->
+  <div id="achievementNotif" class="achievement-unlock hidden">
+    <div class="achievement-emoji"></div>
+    <div class="achievement-title"></div>
+  </div>
+
+  <!-- Kiwi Tooltip -->
+  <div id="kiwiTooltip">Hey, I'm Kiwi. A Second Grade student in the Elementary School in Taipei City, Taiwan. OCT.2025</div>
+</body>
+</html>

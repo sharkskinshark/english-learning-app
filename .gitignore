@@ -1,0 +1,43 @@
+# Python development/validation scripts (keep locally, don't publish)
+validate_vocab.py
+check_alignment.py
+*.pyc
+__pycache__/
+*.py
+
+# Environment and configuration
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Node (if using build tools in future)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+dist/
+build/
+*.map
+
+# OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Local testing
+test-vocab.html
+*.test.js
+
+# Documentation (internal use)
+SECURITY_AUDIT.md
+DEPLOYMENT_SECURITY.md
