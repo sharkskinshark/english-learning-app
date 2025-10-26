@@ -4,71 +4,77 @@ let currentWord = '';
 const synth = window.speechSynthesis;
 
 // Preferred British female voice matching - optimized for all browsers
-// Priority order: Microsoft Natural > Apple/iOS > Google > Generic
+// IMPORTANT: Moira (Apple voice) is first for iOS devices
 const VOICE_PREFERENCES = [
-  // Windows/Edge/Chrome - Microsoft Natural voices (highest quality)
+  // iOS/macOS - Apple voices (FIRST PRIORITY - highest quality on Apple devices)
+  'Moira',      // PRIMARY: British female (iOS/macOS - highly natural)
+  'Victoria',   // British female (iOS - natural)
+  'Fiona',      // British female (macOS - natural)
+  'Ellen',      // English female
+  'Samantha',   // English female
+  // Windows/Edge/Chrome - Microsoft Natural voices
   'Microsoft Sonia Online (Natural)',
   'Microsoft Libby Online (Natural)',
   'Microsoft Olivia Online (Natural)',
   'Microsoft Hazel',
   'Microsoft Zira Online (Natural)',
-  // macOS/iOS - Apple voices (natural & human-like)
-  'Moira',      // British female (iOS/macOS - highly natural)
-  'Victoria',   // British female (iOS - natural)
-  'Fiona',      // British female (macOS - natural)
-  'Ellen',      // English female
-  'Samantha',   // English female
   // Google voices
   'Google UK English Female',
   'Google UK English',
-  // Chrome/Edge fallbacks
+  // Fallbacks
   'en-GB female',
-  'English Female',
-  'female'
+  'English Female'
 ];
 
 function pickBritishFemaleVoice() {
   try {
     const voices = (typeof synth?.getVoices === 'function') ? synth.getVoices() : [];
-    if (!voices || voices.length === 0) return null;
+    if (!voices || voices.length === 0) {
+      console.warn('No voices available');
+      return null;
+    }
+    
+    // Log available voices for debugging
+    logAvailableVoices();
     
     const voiceStr = (v) => `${(v.name || '') + ' ' + (v.lang || '')}`.toLowerCase();
 
     // Filter for en-GB or UK English voices
     const enGb = voices.filter(v => {
       const s = voiceStr(v);
-      return /en-gb|en_gb|english \(united kingdom\)|british|uk english/i.test(s) || 
-             /moira|victoria|fiona|sonia|libby|olivia|hazel/i.test(v.name || '');
+      return /en-gb|en_gb|english \(united kingdom\)|british|uk english|moira|victoria|fiona/i.test(s);
     });
 
-    // 1. Try exact preferred voice matches
+    console.log('Found', enGb.length, 'British/en-GB voices:', enGb.map(v => v.name + ' (' + v.lang + ')').join(', '));
+
+    // 1. Try exact preferred voice matches (EXACT - case insensitive)
     for (const pref of VOICE_PREFERENCES) {
       const match = voices.find(v => (v.name || '').toLowerCase() === pref.toLowerCase());
       if (match) {
-        console.log('Voice selected (exact):', v.name);
+        console.log('✓ EXACT MATCH:', match.name, '(' + match.lang + ')');
         return match;
       }
     }
 
-    // 2. Try partial name matches in priority order
+    // 2. Try case-insensitive contains match
     for (const pref of VOICE_PREFERENCES) {
       const match = voices.find(v => (v.name || '').toLowerCase().includes(pref.toLowerCase()));
       if (match) {
-        console.log('Voice selected (partial):', match.name);
+        console.log('✓ PARTIAL MATCH:', match.name, '(' + match.lang + ')');
         return match;
       }
     }
 
     // 3. Pick en-GB voice with female indicators
     if (enGb.length > 0) {
-      const femaleIndicators = /female|woman|lady|girl|female|ms|mrs|sonia|libby|olivia|moira|victoria|fiona|ellen|samantha/i;
+      const femaleIndicators = /female|woman|lady|girl|ms|mrs|sonia|libby|olivia|moira|victoria|fiona|ellen|samantha/i;
       const female = enGb.find(v => femaleIndicators.test(v.name || ''));
       if (female) {
-        console.log('Voice selected (en-GB female):', female.name);
+        console.log('✓ EN-GB FEMALE:', female.name, '(' + female.lang + ')');
         return female;
       }
       // Just return first en-GB if no female match
-      console.log('Voice selected (en-GB):', enGb[0].name);
+      console.log('✓ EN-GB (no female):', enGb[0].name, '(' + enGb[0].lang + ')');
       return enGb[0];
     }
 
@@ -78,23 +84,37 @@ function pickBritishFemaleVoice() {
       return /^en/i.test(v.lang || '') && /female|woman|lady|girl/i.test(v.name || '');
     });
     if (engFemale) {
-      console.log('Voice selected (en female):', engFemale.name);
+      console.log('✓ EN FEMALE FALLBACK:', engFemale.name, '(' + engFemale.lang + ')');
       return engFemale;
     }
 
     // 5. Final fallback: any English voice
     const eng = voices.find(v => /^en/i.test(v.lang || ''));
     if (eng) {
-      console.log('Voice selected (en):', eng.name);
+      console.log('✓ EN FALLBACK:', eng.name, '(' + eng.lang + ')');
       return eng;
     }
 
     // 6. Ultimate fallback: first available voice
-    console.log('Voice selected (first):', voices[0].name);
+    console.log('✓ FIRST VOICE:', voices[0].name, '(' + voices[0].lang + ')');
     return voices[0];
   } catch (e) {
     console.warn('Voice selection error:', e);
     return null;
+  }
+}
+
+// Debug function to show all available voices
+function logAvailableVoices() {
+  try {
+    const voices = (typeof synth?.getVoices === 'function') ? synth.getVoices() : [];
+    console.log('=== ALL AVAILABLE VOICES ===');
+    voices.forEach((v, i) => {
+      console.log(`${i}: "${v.name}" (lang: ${v.lang}) [default: ${v.default}]`);
+    });
+    console.log('=== END VOICES ===');
+  } catch (e) {
+    console.warn('Error logging voices:', e);
   }
 }
 const PROGRESS_KEY = 'englishAppProgress';
