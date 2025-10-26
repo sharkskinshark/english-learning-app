@@ -10,7 +10,10 @@ const VOICE_PREFERENCES = [
   'Microsoft Olivia Online (Natural)',
   'Microsoft Hazel',
   'Google UK English Female',
-  'Google UK English'
+  'Google UK English',
+  'Moira',  // macOS/iOS British voice
+  'Victoria',  // iOS voice
+  'Fiona'  // macOS British voice
 ];
 
 function pickBritishFemaleVoice() {
@@ -19,7 +22,7 @@ function pickBritishFemaleVoice() {
     const hay = (v) => `${v.lang || ''} ${v.name || ''}`;
 
     // Prefer en-GB / UK English voices first
-    const enGb = voices.filter(v => /en-GB|English \(United Kingdom\)|\bUK\b/i.test(hay(v)));
+    const enGb = voices.filter(v => /en-GB|English \(United Kingdom\)|\bUK\b|\bBritish\b/i.test(hay(v)));
 
     // Try explicit preferred names in order
     for (const pref of VOICE_PREFERENCES) {
@@ -28,7 +31,7 @@ function pickBritishFemaleVoice() {
     }
 
     // Otherwise, pick any en-GB voice that looks female by name
-    const enGbFemale = enGb.find(v => /female/i.test(v.name || ''));
+    const enGbFemale = enGb.find(v => /female|woman|lady|girl|\bsonia\b|\bmoira\b|\bvictoria\b|\bfiona\b/i.test(v.name || ''));
     if (enGbFemale) return enGbFemale;
 
     // Else any en-GB
@@ -36,7 +39,7 @@ function pickBritishFemaleVoice() {
 
     // Fallback to any English voice
     const en = voices.filter(v => /^en[-_]/i.test(v.lang || ''));
-    const enFemale = en.find(v => /female/i.test(v.name || ''));
+    const enFemale = en.find(v => /female|woman|lady|girl/i.test(v.name || ''));
     return enFemale || en[0] || voices[0] || null;
   } catch (e) {
     console.warn('Voice selection failed:', e);
