@@ -3,46 +3,97 @@ let session = { words: [], index: 0, score: 0, level: '', category: '' };
 let currentWord = '';
 const synth = window.speechSynthesis;
 
-// Preferred British female voice matching (best-effort across browsers)
+// Preferred British female voice matching - optimized for all browsers
+// Priority order: Microsoft Natural > Apple/iOS > Google > Generic
 const VOICE_PREFERENCES = [
+  // Windows/Edge/Chrome - Microsoft Natural voices (highest quality)
   'Microsoft Sonia Online (Natural)',
   'Microsoft Libby Online (Natural)',
   'Microsoft Olivia Online (Natural)',
   'Microsoft Hazel',
+  'Microsoft Zira Online (Natural)',
+  // macOS/iOS - Apple voices (natural & human-like)
+  'Moira',      // British female (iOS/macOS - highly natural)
+  'Victoria',   // British female (iOS - natural)
+  'Fiona',      // British female (macOS - natural)
+  'Ellen',      // English female
+  'Samantha',   // English female
+  // Google voices
   'Google UK English Female',
   'Google UK English',
-  'Moira',  // macOS/iOS British voice
-  'Victoria',  // iOS voice
-  'Fiona'  // macOS British voice
+  // Chrome/Edge fallbacks
+  'en-GB female',
+  'English Female',
+  'female'
 ];
 
 function pickBritishFemaleVoice() {
   try {
     const voices = (typeof synth?.getVoices === 'function') ? synth.getVoices() : [];
-    const hay = (v) => `${v.lang || ''} ${v.name || ''}`;
+    if (!voices || voices.length === 0) return null;
+    
+    const voiceStr = (v) => `${(v.name || '') + ' ' + (v.lang || '')}`.toLowerCase();
 
-    // Prefer en-GB / UK English voices first
-    const enGb = voices.filter(v => /en-GB|English \(United Kingdom\)|\bUK\b|\bBritish\b/i.test(hay(v)));
+    // Filter for en-GB or UK English voices
+    const enGb = voices.filter(v => {
+      const s = voiceStr(v);
+      return /en-gb|en_gb|english \(united kingdom\)|british|uk english/i.test(s) || 
+             /moira|victoria|fiona|sonia|libby|olivia|hazel/i.test(v.name || '');
+    });
 
-    // Try explicit preferred names in order
+    // 1. Try exact preferred voice matches
     for (const pref of VOICE_PREFERENCES) {
-      const m = enGb.find(v => (v.name || '').includes(pref));
-      if (m) return m;
+      const match = voices.find(v => (v.name || '').toLowerCase() === pref.toLowerCase());
+      if (match) {
+        console.log('Voice selected (exact):', v.name);
+        return match;
+      }
     }
 
-    // Otherwise, pick any en-GB voice that looks female by name
-    const enGbFemale = enGb.find(v => /female|woman|lady|girl|\bsonia\b|\bmoira\b|\bvictoria\b|\bfiona\b/i.test(v.name || ''));
-    if (enGbFemale) return enGbFemale;
+    // 2. Try partial name matches in priority order
+    for (const pref of VOICE_PREFERENCES) {
+      const match = voices.find(v => (v.name || '').toLowerCase().includes(pref.toLowerCase()));
+      if (match) {
+        console.log('Voice selected (partial):', match.name);
+        return match;
+      }
+    }
 
-    // Else any en-GB
-    if (enGb.length) return enGb[0];
+    // 3. Pick en-GB voice with female indicators
+    if (enGb.length > 0) {
+      const femaleIndicators = /female|woman|lady|girl|female|ms|mrs|sonia|libby|olivia|moira|victoria|fiona|ellen|samantha/i;
+      const female = enGb.find(v => femaleIndicators.test(v.name || ''));
+      if (female) {
+        console.log('Voice selected (en-GB female):', female.name);
+        return female;
+      }
+      // Just return first en-GB if no female match
+      console.log('Voice selected (en-GB):', enGb[0].name);
+      return enGb[0];
+    }
 
-    // Fallback to any English voice
-    const en = voices.filter(v => /^en[-_]/i.test(v.lang || ''));
-    const enFemale = en.find(v => /female|woman|lady|girl/i.test(v.name || ''));
-    return enFemale || en[0] || voices[0] || null;
+    // 4. Fallback: any English voice with female indicators
+    const engFemale = voices.find(v => {
+      const s = voiceStr(v);
+      return /^en/i.test(v.lang || '') && /female|woman|lady|girl/i.test(v.name || '');
+    });
+    if (engFemale) {
+      console.log('Voice selected (en female):', engFemale.name);
+      return engFemale;
+    }
+
+    // 5. Final fallback: any English voice
+    const eng = voices.find(v => /^en/i.test(v.lang || ''));
+    if (eng) {
+      console.log('Voice selected (en):', eng.name);
+      return eng;
+    }
+
+    // 6. Ultimate fallback: first available voice
+    console.log('Voice selected (first):', voices[0].name);
+    return voices[0];
   } catch (e) {
-    console.warn('Voice selection failed:', e);
+    console.warn('Voice selection error:', e);
     return null;
   }
 }
@@ -84,31 +135,37 @@ function speakWord(word) {
   }
 
   const utterance = new SpeechSynthesisUtterance(word);
-  // Natural-sounding British settings
+  // Natural-sounding British settings optimized for all devices
   utterance.lang = 'en-GB';
-  utterance.rate = 0.9;    // a touch slower for clarity
-  utterance.pitch = 1.05;  // slight pitch lift for a youthful tone
+  utterance.rate = 0.85;    // slightly slower for clarity and naturalness
+  utterance.pitch = 1.1;    // moderate pitch lift for youthful female voice
+  utterance.volume = 1.0;   // full volume
 
   const assignVoiceAndSpeak = () => {
     const voice = pickBritishFemaleVoice();
-    if (voice) utterance.voice = voice;
+    if (voice) {
+      utterance.voice = voice;
+      console.log('Speaking with voice:', voice.name, '(' + voice.lang + ')');
+    } else {
+      console.warn('No suitable voice found, using system default');
+    }
     // Cancel any queued utterances to avoid overlap
     try { synth.cancel(); } catch {}
     synth.speak(utterance);
   };
 
-  // Voices may not be loaded immediately in some browsers
+  // Voices may not be loaded immediately in some browsers (especially iOS/Safari)
   const voicesNow = (typeof synth?.getVoices === 'function') ? synth.getVoices() : [];
   if (!voicesNow || voicesNow.length === 0) {
-    // Try again when voices load
+    // Try again when voices load - important for iOS Safari
     const handler = () => {
       try { assignVoiceAndSpeak(); } finally { synth.onvoiceschanged = null; }
     };
     synth.onvoiceschanged = handler;
-    // Fallback timeout in case onvoiceschanged doesn't fire
+    // Fallback timeout in case onvoiceschanged doesn't fire (e.g., iOS)
     setTimeout(() => {
       if (synth.onvoiceschanged) { synth.onvoiceschanged = null; assignVoiceAndSpeak(); }
-    }, 600);
+    }, 800);  // Increased timeout for iOS
   } else {
     assignVoiceAndSpeak();
   }
