@@ -222,6 +222,8 @@
       console.log('✅ Kiwi two-stage tooltip initialized', isMobile ? '(Mobile Mode)' : '(Desktop Mode)');
       
       function showKiwiTooltip() {
+        console.log('🚀 showKiwiTooltip called');
+        
         // Clear any existing timeout
         if (stageTimeout) {
           clearTimeout(stageTimeout);
@@ -230,11 +232,14 @@
         // Reset to stage 1
         stage1.classList.add('active');
         stage2.classList.remove('active');
+        console.log('📝 Stage 1 activated, Stage 2 deactivated');
         
         // Show tooltip
         tooltip.classList.add('show');
         isTooltipVisible = true;
-        console.log('🥝 Stage 1: Personal message shown');
+        console.log('🥝 Tooltip show class added, isTooltipVisible:', isTooltipVisible);
+        console.log('🎭 Tooltip element:', tooltip);
+        console.log('🎭 Tooltip classes:', tooltip.className);
         
         // Start heartbeat animation
         kiwiCharacter.classList.add('mobile-heartbeat');
@@ -246,6 +251,8 @@
           stage2.classList.add('active');
           console.log('🥝 Stage 2: Instructions shown');
         }, 3000);
+        
+        console.log('⏰ Stage 2 timeout set for 3 seconds');
       }
       
       function hideKiwiTooltip() {
@@ -270,19 +277,35 @@
           e.preventDefault();
           e.stopPropagation();
           
+          console.log('📱 Mobile: Kiwi clicked, current tooltip visible:', isTooltipVisible);
+          
           if (isTooltipVisible) {
             hideKiwiTooltip();
-            console.log('� Mobile: Kiwi clicked - hiding tooltip');
+            console.log('📱 Mobile: Hiding tooltip');
           } else {
             showKiwiTooltip();
-            console.log('📱 Mobile: Kiwi clicked - showing tooltip');
+            console.log('📱 Mobile: Showing tooltip immediately');
           }
         });
         
-        // Touch events for mobile
+        // Also add touchend for better responsiveness
+        kiwiCharacter.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          console.log('📱 Mobile: Touch ended, current tooltip visible:', isTooltipVisible);
+          
+          if (!isTooltipVisible) {
+            showKiwiTooltip();
+            console.log('📱 Mobile: Touch end - showing tooltip');
+          }
+        }, { passive: false });
+        
+        // Touch start for immediate feedback
         kiwiCharacter.addEventListener('touchstart', function(e) {
           e.preventDefault();
           e.stopPropagation();
+          console.log('📱 Mobile: Touch started');
         }, { passive: false });
         
         // Click anywhere else to hide tooltip

@@ -620,9 +620,10 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
 }
 
 #kiwiTooltip.show {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1.02);
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translate(-50%, -50%) scale(1.02) !important;
+  display: block !important;
 }
 
 /* Tooltip stages */
@@ -640,9 +641,9 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
 }
 
 .tooltip-stage.active {
-  opacity: 1;
-  visibility: visible;
-  position: relative;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
 }
 
 /* Stage 1 - Personal message */
