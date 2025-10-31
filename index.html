@@ -265,8 +265,16 @@
       kiwiCharacter.addEventListener('touchstart', function(e) {
         e.preventDefault();
         e.stopPropagation();
+        kiwiCharacter.classList.add('mobile-heartbeat');
         showKiwiTooltip();
-        console.log('📱 Touch started - starting two-stage tooltip');
+        console.log('📱 Touch started - starting heartbeat and two-stage tooltip');
+      }, { passive: false });
+      
+      // Stop mobile heartbeat when touch ends
+      kiwiCharacter.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        kiwiCharacter.classList.remove('mobile-heartbeat');
+        console.log('📱 Touch ended - stopping heartbeat');
       }, { passive: false });
       
       // Click anywhere on screen to dismiss tooltip

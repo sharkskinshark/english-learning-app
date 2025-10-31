@@ -27,8 +27,27 @@ body{
   pointer-events: auto;
 }
 
+/* Heartbeat animation keyframes */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .kiwi-character:hover {
-  transform: scale(1.1);
+  animation: heartbeat 0.8s ease-in-out infinite;
 }
 
 /* Disable hover effects on mobile to prevent tooltip conflicts */
@@ -49,9 +68,12 @@ body{
   }
   
   .kiwi-character:active {
-    opacity: 1;
-    transform: scale(1.05);
-    transition: all 0.1s ease;
+    animation: heartbeat 0.8s ease-in-out infinite;
+  }
+  
+  /* Mobile touch heartbeat animation */
+  .kiwi-character.mobile-heartbeat {
+    animation: heartbeat 0.8s ease-in-out infinite;
   }
 }
 
