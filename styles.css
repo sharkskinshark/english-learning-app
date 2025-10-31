@@ -1015,11 +1015,12 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   box-shadow: 0 4px 12px rgba(255, 82, 82, 0.4);
 }
 
-/* Kiwi Tooltip - Enhanced for perfect centering across all devices */
+/* Kiwi Tooltip - Enhanced for perfect VIEWPORT centering across all devices */
 #kiwiTooltip {
   position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
+  /* Center in VISIBLE viewport, not entire page */
+  top: 50vh !important;
+  left: 50vw !important;
   right: auto !important;
   bottom: auto !important;
   transform: translate(-50%, -50%) !important;
@@ -1044,7 +1045,7 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   overflow: visible;
 }
 
-/* Mobile responsive tooltip */
+/* Mobile responsive tooltip - VIEWPORT centered */
 @media (max-width: 768px) {
   #kiwiTooltip {
     max-width: 85vw;
@@ -1053,14 +1054,14 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
     font-size: 14px;
     line-height: 1.4;
     border-radius: 12px;
-    /* Ensure proper centering on mobile */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translate(-50%, -50%);
-    margin: 0;
+    /* Ensure proper VIEWPORT centering on mobile */
+    position: fixed !important;
+    top: 50vh !important;
+    left: 50vw !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
     /* Add scroll only when needed on mobile */
     overflow-y: auto;
     /* Ensure it stays within viewport */
@@ -1069,7 +1070,7 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   }
 }
 
-/* Extra small screens (phones in portrait) */
+/* Extra small screens (phones in portrait) - VIEWPORT centered */
 @media (max-width: 480px) {
   #kiwiTooltip {
     max-width: calc(100vw - 30px);
@@ -1078,9 +1079,9 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
     font-size: 13px;
     line-height: 1.3;
     border-radius: 10px;
-    /* Ensure perfect centering */
-    top: 50%;
-    left: 50%;
+    /* Ensure perfect VIEWPORT centering */
+    top: 50vh !important;
+    left: 50vw !important;
     transform: translate(-50%, -50%);
   }
 }
@@ -1230,12 +1231,12 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
     grid-template-columns: 1fr;
   }
   
-  /* Mobile Kiwi tooltip improvements - FIXED for perfect centering */
+  /* Mobile Kiwi tooltip improvements - FIXED for perfect VIEWPORT centering */
   #kiwiTooltip {
-    /* Force center positioning on all devices */
+    /* Force center positioning in VISIBLE viewport on all devices */
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
+    top: 50vh !important;
+    left: 50vw !important;
     right: auto !important;
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
@@ -1334,13 +1335,13 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   }
 }
 
-/* Tablet devices (iPad, Windows tablets) - Ensure Kiwi tooltip centering */
+/* Tablet devices (iPad, Windows tablets) - Ensure Kiwi tooltip VIEWPORT centering */
 @media (min-width: 481px) and (max-width: 1024px) {
   #kiwiTooltip {
-    /* Perfect centering for tablet devices */
+    /* Perfect VIEWPORT centering for tablet devices */
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
+    top: 50vh !important;
+    left: 50vw !important;
     right: auto !important;
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
@@ -1355,13 +1356,13 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   }
 }
 
-/* Desktop/Laptop devices - Ensure Kiwi tooltip centering */
+/* Desktop/Laptop devices - Ensure Kiwi tooltip VIEWPORT centering */
 @media (min-width: 1025px) {
   #kiwiTooltip {
-    /* Perfect centering for desktop/laptop */
+    /* Perfect VIEWPORT centering for desktop/laptop */
     position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
+    top: 50vh !important;
+    left: 50vw !important;
     right: auto !important;
     bottom: auto !important;
     transform: translate(-50%, -50%) !important;
