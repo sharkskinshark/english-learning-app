@@ -208,8 +208,22 @@
       
       // Detect if device is mobile/tablet
       function detectMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-               || window.innerWidth <= 768;
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+        const isSmallScreen = window.innerWidth <= 768;
+        const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        const result = isMobileUA || isSmallScreen || hasTouchScreen;
+        console.log('🔍 Device detection:', {
+          userAgent: userAgent.substring(0, 50) + '...',
+          isMobileUA,
+          isSmallScreen,
+          hasTouchScreen,
+          screenSize: window.innerWidth + 'x' + window.innerHeight,
+          result
+        });
+        
+        return result;
       }
       
       // Check if elements exist
@@ -240,10 +254,30 @@
           const screenHeight = window.innerHeight;
           console.log('📱 Screen dimensions:', screenWidth, 'x', screenHeight);
           
-          // Ensure tooltip fits in viewport
-          tooltip.style.maxWidth = (screenWidth * 0.9) + 'px';
-          tooltip.style.maxHeight = (screenHeight * 0.7) + 'px';
-          console.log('📱 Tooltip size adjusted for mobile');
+          // Calculate safe dimensions
+          const safeWidth = Math.min(screenWidth - 30, 400);
+          const safeHeight = screenHeight - 60;
+          
+          // Reset any previous inline styles
+          tooltip.style.maxWidth = safeWidth + 'px';
+          tooltip.style.maxHeight = safeHeight + 'px';
+          tooltip.style.position = 'fixed';
+          tooltip.style.top = '50%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translate(-50%, -50%)';
+          tooltip.style.margin = '0';
+          
+          console.log('📱 Tooltip size adjusted for mobile:', safeWidth, 'x', safeHeight);
+        } else {
+          // Desktop - reset to CSS defaults
+          tooltip.style.maxWidth = '';
+          tooltip.style.maxHeight = '';
+          tooltip.style.position = '';
+          tooltip.style.top = '';
+          tooltip.style.left = '';
+          tooltip.style.transform = '';
+          tooltip.style.margin = '';
+          console.log('🖥️ Tooltip reset for desktop');
         }
         
         // Show tooltip
@@ -284,6 +318,8 @@
       }
       
       if (isMobile) {
+        console.log('📱 Setting up mobile/tablet interactions');
+        
         // Mobile/Tablet behavior - click to show/hide
         kiwiCharacter.addEventListener('click', function(e) {
           e.preventDefault();
@@ -300,24 +336,27 @@
           }
         });
         
-        // Also add touchend for better responsiveness
+        // Touch start for immediate feedback
+        kiwiCharacter.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('📱 Mobile: Touch started');
+        }, { passive: false });
+        
+        // Touch end for better responsiveness (especially iPad)
         kiwiCharacter.addEventListener('touchend', function(e) {
           e.preventDefault();
           e.stopPropagation();
           
           console.log('📱 Mobile: Touch ended, current tooltip visible:', isTooltipVisible);
           
-          if (!isTooltipVisible) {
-            showKiwiTooltip();
-            console.log('📱 Mobile: Touch end - showing tooltip');
-          }
-        }, { passive: false });
-        
-        // Touch start for immediate feedback
-        kiwiCharacter.addEventListener('touchstart', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          console.log('📱 Mobile: Touch started');
+          // Small delay to ensure click event doesn't interfere
+          setTimeout(() => {
+            if (!isTooltipVisible) {
+              showKiwiTooltip();
+              console.log('📱 Mobile: Touch end - showing tooltip');
+            }
+          }, 50);
         }, { passive: false });
         
         // Click anywhere else to hide tooltip
