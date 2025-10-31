@@ -176,12 +176,16 @@
     <div class="achievement-title"></div>
   </div>
 
+  <!-- Kiwi character - clickable element -->
+  <div class="kiwi-character" id="kiwiCharacter"></div>
+
   <!-- Kiwi Tooltip -->
-  <div id="kiwiTooltip">Hey, I'm Kiwi! 🥝 Touch anywhere on the screen to see me!</div>
+  <div id="kiwiTooltip">Hey, I'm Kiwi! 🥝 Click on me to say hello!</div>
 
   <script>
-    // Universal touch/click handler for showing Kiwi tooltip
-    function setupKiwiTooltip() {
+    // Direct Kiwi character click handler
+    function setupKiwiClick() {
+      const kiwiCharacter = document.getElementById('kiwiCharacter');
       const tooltip = document.getElementById('kiwiTooltip');
       let tooltipTimeout;
       
@@ -202,32 +206,29 @@
         }, 2000);
       }
       
-      // Listen for any click anywhere on the page
-      document.addEventListener('click', function(e) {
-        // Avoid showing tooltip when clicking UI buttons
-        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
-          return;
-        }
+      // Click event on the Kiwi itself
+      kiwiCharacter.addEventListener('click', function(e) {
+        e.stopPropagation();
         showKiwiTooltip();
+        console.log('✅ Kiwi character clicked directly!');
       });
       
-      // Listen for any touch anywhere on the page
-      document.addEventListener('touchstart', function(e) {
-        // Avoid showing tooltip when touching UI elements
-        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
-          return;
-        }
+      // Touch event on the Kiwi itself
+      kiwiCharacter.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         showKiwiTooltip();
-      });
+        console.log('✅ Kiwi character touched directly!');
+      }, { passive: false });
       
-      console.log('🥝 Universal Kiwi tooltip initialized - touch anywhere!');
+      console.log('🥝 Direct Kiwi character click handler initialized');
     }
 
     // Initialize when page loads
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', setupKiwiTooltip);
+      document.addEventListener('DOMContentLoaded', setupKiwiClick);
     } else {
-      setupKiwiTooltip();
+      setupKiwiClick();
     }
   </script>
 </body>
