@@ -670,6 +670,24 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   display: block !important;
 }
 
+/* Flying animation from Kiwi position */
+/* Flying animation from Kiwi */
+.fly-from-kiwi {
+  animation: flyFromKiwiDynamic 0.6s ease-out forwards !important;
+}
+
+/* Apply flying animation when showing */
+#kiwiTooltip.show.fly-from-kiwi {
+  animation: flyFromKiwi 0.6s ease-out forwards;
+}
+
+/* Mobile specific flying animation */
+@media (max-width: 768px) {
+  #kiwiTooltip.show.fly-from-kiwi {
+    animation: flyFromKiwiMobile 0.6s ease-out forwards;
+  }
+}
+
 /* Tooltip stages */
 .tooltip-stage {
   opacity: 0;
