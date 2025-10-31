@@ -423,7 +423,9 @@
         isHalloween,
         year: today.getFullYear(),
         month: today.getMonth(),
-        day: today.getDate()
+        day: today.getDate(),
+        userAgent: navigator.userAgent,
+        screenSize: window.innerWidth + 'x' + window.innerHeight
       });
       
       if (isHalloween) {
@@ -432,49 +434,86 @@
         const halloweenEmojis = document.querySelectorAll('.halloween-emoji');
         const centerText = document.querySelector('.halloween-center-text');
         
+        console.log('🎃 Halloween elements found:', {
+          loader: !!halloweenLoader,
+          content: !!mainContent,
+          emojis: halloweenEmojis.length,
+          text: !!centerText
+        });
+        
         // Show Halloween loader
         document.body.classList.add('halloween-active');
         halloweenLoader.classList.add('active');
         
-        // Set emoji content
-        halloweenEmojis.forEach(emoji => {
-          emoji.textContent = emoji.getAttribute('data-emoji');
+        // Force display for mobile debugging
+        halloweenLoader.style.display = 'block';
+        halloweenLoader.style.zIndex = '9999';
+        
+        // Set emoji content with mobile-specific handling
+        halloweenEmojis.forEach((emoji, index) => {
+          const emojiChar = emoji.getAttribute('data-emoji');
+          emoji.textContent = emojiChar;
+          emoji.innerHTML = emojiChar; // Fallback for mobile
+          console.log(`🎃 Emoji ${index}:`, emojiChar, emoji.textContent);
         });
         
-        console.log('🎃 Halloween animation started!');
+        console.log('🎃 Halloween animation started on mobile device!');
         
         // Stage 1: Fly emojis from corners to center (0.8s)
         setTimeout(() => {
+          console.log('🎃 Stage 1: Flying emojis to center');
           halloweenEmojis.forEach((emoji, index) => {
             setTimeout(() => {
               emoji.classList.add('fly-in');
+              console.log(`🎃 Emoji ${index} flying in`);
+              
+              // Force style for mobile
+              emoji.style.fontSize = '50px';
+              emoji.style.opacity = '1';
+              emoji.style.top = '50%';
+              emoji.style.left = '50%';
+              emoji.style.transform = 'translate(-50%, -50%)';
+              emoji.style.position = 'absolute';
+              emoji.style.zIndex = '10000';
             }, index * 150); // Stagger the animations
           });
         }, 500);
         
         // Stage 2: Show center text (1.5s after start)
         setTimeout(() => {
+          console.log('🎃 Stage 2: Showing center text');
           centerText.classList.add('show');
+          centerText.style.opacity = '1';
         }, 1500);
         
         // Stage 3: Enlarge emojis (2.5s after start)
         setTimeout(() => {
-          halloweenEmojis.forEach(emoji => {
+          console.log('🎃 Stage 3: Enlarging emojis');
+          halloweenEmojis.forEach((emoji, index) => {
             emoji.classList.add('enlarge');
+            emoji.style.fontSize = '70px';
+            emoji.style.transform = 'translate(-50%, -50%) scale(1.2)';
+            console.log(`🎃 Emoji ${index} enlarged`);
           });
         }, 2500);
         
         // Stage 4: Fade out and show main content (4s total)
         setTimeout(() => {
+          console.log('🎃 Stage 4: Fading out Halloween, showing main content');
           halloweenLoader.classList.add('fade-out');
           mainContent.classList.add('show');
           
           // Remove Halloween loader after fade completes
           setTimeout(() => {
             document.body.classList.remove('halloween-active');
-            halloweenLoader.remove();
+            if (halloweenLoader) {
+              halloweenLoader.remove();
+            }
+            console.log('🎃 Halloween animation completed and cleaned up');
           }, 800);
         }, 4000);
+      } else {
+        console.log('🎃 Not Halloween 2025 - skipping animation');
       }
     }
     

@@ -9,10 +9,11 @@
   z-index: 9999;
   display: none; /* Hidden by default, shown only on Halloween */
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .halloween-loader.active {
-  display: block;
+  display: block !important;
 }
 
 .halloween-emoji {
@@ -21,6 +22,9 @@
   opacity: 0;
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 10000;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  will-change: transform, opacity, font-size;
 }
 
 /* Initial positions for each corner */
@@ -63,14 +67,17 @@
   right: auto !important;
   bottom: auto !important;
   transform: translate(-50%, -50%) !important;
+  -webkit-transform: translate(-50%, -50%) !important;
   font-size: 60px;
   opacity: 1;
   animation: halloweenPulse 1s ease-in-out infinite;
+  -webkit-animation: halloweenPulse 1s ease-in-out infinite;
 }
 
 .halloween-emoji.enlarge {
-  font-size: 80px;
-  transform: translate(-50%, -50%) scale(1.2);
+  font-size: 80px !important;
+  transform: translate(-50%, -50%) scale(1.2) !important;
+  -webkit-transform: translate(-50%, -50%) scale(1.2) !important;
 }
 
 .halloween-center-text {
@@ -93,9 +100,22 @@
 @keyframes halloweenPulse {
   0%, 100% {
     filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
+    -webkit-filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
   }
   50% {
     filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 107, 53, 0.9));
+    -webkit-filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 107, 53, 0.9));
+  }
+}
+
+@-webkit-keyframes halloweenPulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
+    -webkit-filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 107, 53, 0.9));
+    -webkit-filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 107, 53, 0.9));
   }
 }
 
@@ -103,6 +123,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.8s ease, visibility 0.8s ease;
+  -webkit-transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
 /* Ensure main content is hidden during Halloween loading */
@@ -115,6 +136,35 @@
   opacity: 1;
   visibility: visible;
   transition: opacity 0.8s ease, visibility 0.8s ease;
+  -webkit-transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+/* Mobile-specific Halloween optimizations */
+@media (max-width: 768px) {
+  .halloween-emoji {
+    font-size: 0px !important;
+    -webkit-text-size-adjust: none;
+  }
+  
+  .halloween-emoji.fly-in {
+    font-size: 50px !important;
+  }
+  
+  .halloween-emoji.enlarge {
+    font-size: 70px !important;
+  }
+  
+  .halloween-center-text {
+    font-size: 24px !important;
+    padding: 0 20px;
+    text-align: center;
+  }
+  
+  .halloween-loader {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
 }
 
 :root{--bg:#f7fbff;--card:#fff;--accent:#2b8cf3;--ok:#2dbf6e;--bad:#f44336}
