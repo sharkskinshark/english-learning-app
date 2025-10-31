@@ -1356,6 +1356,37 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   }
 }
 
+/* Specific iPad Safari fixes for viewport centering issues */
+@media (min-width: 768px) and (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
+  #kiwiTooltip {
+    /* iPad-specific viewport positioning workaround */
+    position: fixed !important;
+    /* Use calc() with viewport units for better iPad Safari support */
+    top: calc(50vh - 0px) !important;
+    left: calc(50vw - 0px) !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    /* Force hardware acceleration for iPad */
+    -webkit-transform: translate(-50%, -50%) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    will-change: transform !important;
+    /* iPad-specific sizing */
+    max-width: 480px;
+    max-height: 65vh;
+    font-size: 15px;
+    padding: 16px 20px;
+    line-height: 1.5;
+    margin: 0 !important;
+    z-index: 1002 !important;
+    /* Additional iPad Safari fixes */
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+}
+
 /* Desktop/Laptop devices - Ensure Kiwi tooltip VIEWPORT centering */
 @media (min-width: 1025px) {
   #kiwiTooltip {

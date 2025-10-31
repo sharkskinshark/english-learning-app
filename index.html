@@ -259,11 +259,15 @@
         stage2.classList.remove('active');
         console.log('📝 Stage 1 activated, Stage 2 deactivated');
         
-        // Adjust tooltip size for mobile
+        // Adjust tooltip size for mobile and iPad with viewport-based positioning
         if (isMobile) {
           const screenWidth = window.innerWidth;
           const screenHeight = window.innerHeight;
+          const isIPad = /iPad|Macintosh/i.test(navigator.userAgent) && 'ontouchend' in document;
+          const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome|CriOS|Edge|Edg/i.test(navigator.userAgent);
+          
           console.log('📱 Screen dimensions:', screenWidth, 'x', screenHeight);
+          console.log('📱 Device detection - iPad:', isIPad, 'Safari:', isSafari);
           
           // Calculate safe dimensions
           const safeWidth = Math.min(screenWidth - 30, 400);
@@ -273,10 +277,39 @@
           tooltip.style.maxWidth = safeWidth + 'px';
           tooltip.style.maxHeight = safeHeight + 'px';
           tooltip.style.position = 'fixed';
-          tooltip.style.top = '50%';
-          tooltip.style.left = '50%';
-          tooltip.style.transform = 'translate(-50%, -50%)';
           tooltip.style.margin = '0';
+          tooltip.style.zIndex = '1002';
+          
+          // iPad-specific viewport positioning fixes
+          if (isIPad && isSafari) {
+            console.log('📱 Applying iPad Safari viewport fixes');
+            // Use JavaScript to calculate exact center position for iPad
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            tooltip.style.top = '50vh';
+            tooltip.style.left = '50vw';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+            tooltip.style.webkitTransform = 'translate(-50%, -50%)';
+            
+            // Force recalculation after a brief delay for iPad Safari
+            setTimeout(() => {
+              const centerX = viewportWidth / 2;
+              const centerY = viewportHeight / 2;
+              
+              tooltip.style.top = centerY + 'px';
+              tooltip.style.left = centerX + 'px';
+              tooltip.style.transform = 'translate(-50%, -50%)';
+              tooltip.style.webkitTransform = 'translate(-50%, -50%)';
+              
+              console.log('📱 iPad: Forced pixel positioning -', centerX, centerY);
+            }, 50);
+          } else {
+            // Standard viewport positioning for other mobile devices
+            tooltip.style.top = '50vh';
+            tooltip.style.left = '50vw';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+          }
           
           console.log('📱 Tooltip size adjusted for mobile:', safeWidth, 'x', safeHeight);
         } else {
