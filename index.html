@@ -8,6 +8,11 @@
   <meta name="apple-touch-fullscreen" content="yes" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="theme-color" content="#2b8cf3" />
+  <!-- Eliminate 300ms delay on mobile -->
+  <style>
+    html { -ms-touch-action: manipulation; touch-action: manipulation; }
+    * { -ms-touch-action: manipulation; touch-action: manipulation; }
+  </style>
   <title>Cambridge Vocabulary Practice</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -552,13 +557,6 @@
         // Stage 1: Fly emojis from corners to center (0.8s)
         setTimeout(() => {
           console.log('🎃 Stage 1: Flying emojis to center');
-          
-          // IMMEDIATE FIX: Disable pointer events after 2 seconds to allow button clicks
-          setTimeout(() => {
-            console.log('🎃 EMERGENCY: Disabling Halloween loader pointer events for button access');
-            halloweenLoader.style.pointerEvents = 'none';
-            halloweenLoader.style.zIndex = '0';
-          }, 2000);
           
           halloweenEmojis.forEach((emoji, index) => {
             setTimeout(() => {

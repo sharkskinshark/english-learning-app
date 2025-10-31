@@ -16,16 +16,18 @@
   /* Edge specific fixes */
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* Don't block pointer events during fade-out */
-  pointer-events: auto;
+  /* NEVER block pointer events - let clicks pass through */
+  pointer-events: none !important;
 }
 
 .halloween-loader.active {
   display: block !important;
   visibility: visible !important;
+  /* Still no pointer events even when active */
+  pointer-events: none !important;
 }
 
-/* During fade-out, don't block interactions */
+/* During fade-out, definitely don't block interactions */
 .halloween-loader.fade-out {
   pointer-events: none !important;
   z-index: 0 !important; /* Lower z-index during fade */
@@ -566,9 +568,6 @@ button:active {
   button {
     transition: none !important; /* No transitions on mobile for instant response */
     -webkit-transition: none !important;
-    /* Ensure buttons are above Halloween animation */
-    position: relative !important;
-    z-index: 10000 !important; /* Higher than Halloween loader */
   }
   
   button:active {
@@ -577,10 +576,10 @@ button:active {
   }
 }
 
-/* Specific fix for Start Practice button on iPhone */
+/* Specific fix ONLY for Start Practice button on iPhone - don't affect other elements */
 #startBtn {
   position: relative !important;
-  z-index: 10001 !important; /* Ensure it's above all overlays */
+  z-index: 10001 !important; /* Ensure it's above Halloween overlay */
   /* Force clickable area */
   pointer-events: auto !important;
   -webkit-tap-highlight-color: rgba(43, 140, 243, 0.3) !important;
