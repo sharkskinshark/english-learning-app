@@ -238,6 +238,7 @@
         
         // Start heartbeat animation
         kiwiCharacter.classList.add('mobile-heartbeat');
+        console.log('💓 Heartbeat animation started, classes:', kiwiCharacter.className);
         
         // Transition to stage 2 after 3 seconds
         stageTimeout = setTimeout(() => {
@@ -251,6 +252,7 @@
         tooltip.classList.remove('show');
         isTooltipVisible = false;
         kiwiCharacter.classList.remove('mobile-heartbeat');
+        console.log('💓 Heartbeat animation stopped, classes:', kiwiCharacter.className);
         if (stageTimeout) {
           clearTimeout(stageTimeout);
         }

@@ -46,13 +46,60 @@ body{
   }
 }
 
+/* Webkit keyframes for iOS devices */
+@-webkit-keyframes heartbeat {
+  0% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  25% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  50% {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+  75% {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
 .kiwi-character:hover {
   animation: heartbeat 0.8s ease-in-out infinite;
+  -webkit-animation: heartbeat 0.8s ease-in-out infinite;
 }
 
 /* Mobile heartbeat animation (for touch devices) */
 .kiwi-character.mobile-heartbeat {
-  animation: heartbeat 0.8s ease-in-out infinite;
+  animation: heartbeat 0.8s ease-in-out infinite !important;
+}
+
+/* Specific iPad and iPhone support */
+@media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1024px) 
+  and (-webkit-min-device-pixel-ratio: 1) {
+  .kiwi-character.mobile-heartbeat {
+    animation: heartbeat 0.8s ease-in-out infinite !important;
+    -webkit-animation: heartbeat 0.8s ease-in-out infinite !important;
+  }
+}
+
+/* iPhone specific support */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 428px) 
+  and (-webkit-min-device-pixel-ratio: 2) {
+  .kiwi-character.mobile-heartbeat {
+    animation: heartbeat 0.8s ease-in-out infinite !important;
+    -webkit-animation: heartbeat 0.8s ease-in-out infinite !important;
+  }
 }
 
 /* Disable hover effects on mobile to prevent tooltip conflicts */
@@ -72,12 +119,13 @@ body{
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
   }
   
-  .kiwi-character:active {
+  /* Ensure mobile heartbeat animation works */
+  .kiwi-character.mobile-heartbeat {
     animation: heartbeat 0.8s ease-in-out infinite;
   }
   
-  /* Mobile touch heartbeat animation */
-  .kiwi-character.mobile-heartbeat {
+  /* Touch feedback for mobile */
+  .kiwi-character:active {
     animation: heartbeat 0.8s ease-in-out infinite;
   }
 }
