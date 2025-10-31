@@ -952,12 +952,19 @@ function finishSession(){
   progressSection.classList.remove('hidden');
 }
 
-startBtn.addEventListener('click', ()=>{
+startBtn.addEventListener('click', (e)=>{
+  // Avoid double-firing on touch devices that also fire click events
+  if (buttonTouchHandled) {
+    console.log('📱 Click event skipped - already handled by touch');
+    buttonTouchHandled = false; // Reset for next interaction
+    return;
+  }
+  
   if(!vocab || Object.keys(vocab).length===0){
     promptEl.textContent = 'Vocabulary not loaded yet.';return
   }
   
-  // Add enlarge animation for iPhone when using click events
+  // Add enlarge animation for iPhone when using click events (desktop browsers)
   const isMobile = window.innerWidth <= 768;
   const isIPhone = /iPhone/i.test(navigator.userAgent);
   
@@ -971,15 +978,20 @@ startBtn.addEventListener('click', ()=>{
     }, 300); // Match animation duration
   }
   
+  console.log('🖱️ Starting session via click event');
   startSession();
 });
 
-// Enhanced iPhone touch support for Start Practice button with enlarge animation
+// Enhanced iPhone touch support for Start Practice button with immediate response
+let touchStartTime = 0;
+let buttonTouchHandled = false;
+
 startBtn.addEventListener('touchstart', function(e) {
   console.log('📱 Start button touch started');
-  e.preventDefault();
+  touchStartTime = Date.now();
+  buttonTouchHandled = false;
   
-  // Add enlarge animation class for iPhone visual feedback
+  // Immediate visual feedback
   const isMobile = window.innerWidth <= 768;
   const isIPhone = /iPhone/i.test(navigator.userAgent);
   
@@ -990,25 +1002,38 @@ startBtn.addEventListener('touchstart', function(e) {
     // Remove animation class after animation completes
     setTimeout(() => {
       startBtn.classList.remove('button-enlarge');
-    }, 300); // Match animation duration
+    }, 300);
   }
-}, { passive: false });
+}, { passive: true }); // Changed to passive for better performance
 
 startBtn.addEventListener('touchend', function(e) {
   console.log('📱 Start button touch ended');
-  e.preventDefault();
   
-  // Check if vocab is loaded and button is not disabled
-  if(!vocab || Object.keys(vocab).length===0){
-    promptEl.textContent = 'Vocabulary not loaded yet.';
-    return;
-  }
+  const touchDuration = Date.now() - touchStartTime;
   
-  if (!startBtn.disabled) {
-    console.log('📱 Starting session via touch with enlarge animation');
-    startSession();
+  // Only handle touch if it's a quick tap (not a long press) and not already handled
+  if (touchDuration < 500 && !buttonTouchHandled) {
+    buttonTouchHandled = true;
+    
+    // Prevent the delayed click event
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Check if vocab is loaded and button is not disabled
+    if(!vocab || Object.keys(vocab).length===0){
+      promptEl.textContent = 'Vocabulary not loaded yet.';
+      return;
+    }
+    
+    if (!startBtn.disabled) {
+      console.log('📱 IMMEDIATE session start via optimized touch');
+      // Add small delay to ensure animation is visible
+      setTimeout(() => {
+        startSession();
+      }, 100); // Much shorter delay for better responsiveness
+    }
   }
-}, { passive: false });
+}, { passive: false }); // Keep non-passive to prevent default
 
 listenWordBtn.addEventListener('click', () => {
   const current = session.words[session.index];

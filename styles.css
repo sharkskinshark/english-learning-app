@@ -515,13 +515,13 @@ h1{margin:0 0 12px;font-size:1.6rem}
 }
 .controls select{margin-left:6px;padding:6px}
 button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;
-  /* iPhone touch optimizations for all browsers */
+  /* Enhanced iPhone touch responsiveness - eliminate 300ms delay */
   -webkit-tap-highlight-color: rgba(0,0,0,0.1);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
-  /* Enhanced iPhone 16 Pro browser compatibility */
+  /* Aggressive iOS Safari optimizations */
   -webkit-appearance: none; /* Remove Safari default styling */
   appearance: none; /* Standard property */
   -webkit-border-radius: 6px; /* Explicit webkit border radius */
@@ -530,14 +530,25 @@ button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-r
   backface-visibility: hidden; /* Smooth animations */
   -webkit-backface-visibility: hidden;
   will-change: transform; /* Optimize for changes */
+  /* Fast touch response optimizations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
   /* Ensure proper spacing on iPhone */
   min-height: 44px; /* Apple's recommended touch target */
   min-width: 44px;
-  /* Cross-browser transition support */
-  transition: all 0.15s ease;
-  -webkit-transition: all 0.15s ease;
-  -moz-transition: all 0.15s ease;
-  -ms-transition: all 0.15s ease;
+  /* Instant response transitions */
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -webkit-transition: -webkit-transform 0.1s ease, box-shadow 0.1s ease;
+  -moz-transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -ms-transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+/* Immediate visual feedback on touch */
+button:active {
+  transform: translateZ(0) scale(0.98);
+  -webkit-transform: translateZ(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3);
 }
 button:disabled{opacity:0.6}
 .exercise{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(33,49,70,0.06)}
