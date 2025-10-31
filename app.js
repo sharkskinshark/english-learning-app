@@ -964,60 +964,58 @@ startBtn.addEventListener('click', (e)=>{
     promptEl.textContent = 'Vocabulary not loaded yet.';return
   }
   
-  // Add enlarge animation for iPhone when using click events (desktop browsers)
+  // INSTANT visual feedback for desktop/non-touch devices
   const isMobile = window.innerWidth <= 768;
   const isIPhone = /iPhone/i.test(navigator.userAgent);
   
   if (isMobile || isIPhone) {
-    console.log('📱 Adding button enlarge animation (click event)');
+    console.log('📱 Adding INSTANT button animation (click event)');
     startBtn.classList.add('button-enlarge');
-    
-    // Remove animation class after animation completes
+    // Remove animation immediately after adding it
     setTimeout(() => {
       startBtn.classList.remove('button-enlarge');
-    }, 300); // Match animation duration
+    }, 150); // Very short animation for visual feedback only
   }
   
-  console.log('🖱️ Starting session via click event');
+  console.log('🖱️ ⚡ INSTANT session start via click');
+  // IMMEDIATE execution - no delays
   startSession();
 });
 
-// Enhanced iPhone touch support for Start Practice button with immediate response
+// IMMEDIATE iPhone touch support for Start Practice button - NO DELAYS
 let touchStartTime = 0;
 let buttonTouchHandled = false;
 
 startBtn.addEventListener('touchstart', function(e) {
-  console.log('📱 Start button touch started');
+  console.log('📱 Start button touch started - IMMEDIATE MODE');
   touchStartTime = Date.now();
   buttonTouchHandled = false;
   
-  // Immediate visual feedback
+  // INSTANT visual feedback - no delay
   const isMobile = window.innerWidth <= 768;
   const isIPhone = /iPhone/i.test(navigator.userAgent);
   
   if (isMobile || isIPhone) {
-    console.log('📱 Adding button enlarge animation');
+    console.log('📱 Adding INSTANT button animation');
     startBtn.classList.add('button-enlarge');
-    
-    // Remove animation class after animation completes
-    setTimeout(() => {
-      startBtn.classList.remove('button-enlarge');
-    }, 300);
   }
-}, { passive: true }); // Changed to passive for better performance
+}, { passive: true });
 
 startBtn.addEventListener('touchend', function(e) {
-  console.log('📱 Start button touch ended');
+  console.log('📱 Start button touch ended - IMMEDIATE RESPONSE');
   
   const touchDuration = Date.now() - touchStartTime;
   
-  // Only handle touch if it's a quick tap (not a long press) and not already handled
-  if (touchDuration < 500 && !buttonTouchHandled) {
+  // IMMEDIATE response - no delays or duration checks
+  if (!buttonTouchHandled) {
     buttonTouchHandled = true;
     
     // Prevent the delayed click event
     e.preventDefault();
     e.stopPropagation();
+    
+    // Remove animation immediately
+    startBtn.classList.remove('button-enlarge');
     
     // Check if vocab is loaded and button is not disabled
     if(!vocab || Object.keys(vocab).length===0){
@@ -1026,14 +1024,12 @@ startBtn.addEventListener('touchend', function(e) {
     }
     
     if (!startBtn.disabled) {
-      console.log('📱 IMMEDIATE session start via optimized touch');
-      // Add small delay to ensure animation is visible
-      setTimeout(() => {
-        startSession();
-      }, 100); // Much shorter delay for better responsiveness
+      console.log('📱 ⚡ INSTANT SESSION START - NO DELAY');
+      // IMMEDIATE execution - no setTimeout at all
+      startSession();
     }
   }
-}, { passive: false }); // Keep non-passive to prevent default
+}, { passive: false });
 
 listenWordBtn.addEventListener('click', () => {
   const current = session.words[session.index];

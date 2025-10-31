@@ -539,16 +539,31 @@ button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-r
   min-height: 44px; /* Apple's recommended touch target */
   min-width: 44px;
   /* Instant response transitions */
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  -webkit-transition: -webkit-transform 0.1s ease, box-shadow 0.1s ease;
-  -moz-transition: transform 0.1s ease, box-shadow 0.1s ease;
-  -ms-transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  -webkit-transition: -webkit-transform 0.05s ease, box-shadow 0.05s ease;
+  -moz-transition: transform 0.05s ease, box-shadow 0.05s ease;
+  -ms-transition: transform 0.05s ease, box-shadow 0.05s ease;
 }
-/* Immediate visual feedback on touch */
+/* INSTANT visual feedback on touch - no delays */
 button:active {
-  transform: translateZ(0) scale(0.98);
-  -webkit-transform: translateZ(0) scale(0.98);
-  box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3);
+  transform: translateZ(0) scale(0.98) !important;
+  -webkit-transform: translateZ(0) scale(0.98) !important;
+  box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3) !important;
+  transition: none !important; /* Remove transition on active for instant response */
+  -webkit-transition: none !important;
+}
+
+/* iPhone specific instant touch response */
+@media (max-width: 768px) {
+  button {
+    transition: none !important; /* No transitions on mobile for instant response */
+    -webkit-transition: none !important;
+  }
+  
+  button:active {
+    transform: translateZ(0) scale(0.95) !important;
+    -webkit-transform: translateZ(0) scale(0.95) !important;
+  }
 }
 button:disabled{opacity:0.6}
 .exercise{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(33,49,70,0.06)}
@@ -778,12 +793,12 @@ button:disabled{opacity:0.6}
   }
 }
 
-/* Button enlarge animation class */
+/* Button enlarge animation class - SUPER FAST for immediate response */
 .button-enlarge {
-  animation: buttonEnlarge 0.3s ease-out !important;
-  -webkit-animation: buttonEnlarge 0.3s ease-out !important;
-  -moz-animation: buttonEnlarge 0.3s ease-out !important;
-  -ms-animation: buttonEnlarge 0.3s ease-out !important;
+  animation: buttonEnlarge 0.15s ease-out !important;
+  -webkit-animation: buttonEnlarge 0.15s ease-out !important;
+  -moz-animation: buttonEnlarge 0.15s ease-out !important;
+  -ms-animation: buttonEnlarge 0.15s ease-out !important;
 }
 
 footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
