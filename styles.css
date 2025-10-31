@@ -612,7 +612,6 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
   border: 3px solid #fff;
   max-width: 400px;
   line-height: 1.5;
@@ -666,7 +665,7 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
 #kiwiTooltip.show {
   opacity: 1 !important;
   visibility: visible !important;
-  transform: translate(-50%, -50%) scale(1.02) !important;
+  transform: translate(-50%, -50%) !important;
   display: block !important;
 }
 
