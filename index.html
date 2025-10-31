@@ -183,11 +183,21 @@
   <div id="kiwiTooltip">Hey, I'm Kiwi! 🥝 Click on me to say hello!</div>
 
   <script>
-    // Direct Kiwi character click handler
+    // Direct Kiwi character click handler with debugging
     function setupKiwiClick() {
       const kiwiCharacter = document.getElementById('kiwiCharacter');
       const tooltip = document.getElementById('kiwiTooltip');
       let tooltipTimeout;
+      
+      // Check if element exists
+      if (!kiwiCharacter) {
+        console.error('❌ Kiwi character element not found!');
+        return;
+      }
+      
+      console.log('✅ Kiwi character element found:', kiwiCharacter);
+      console.log('📍 Kiwi position:', window.getComputedStyle(kiwiCharacter).position);
+      console.log('📏 Kiwi size:', kiwiCharacter.offsetWidth, 'x', kiwiCharacter.offsetHeight);
       
       function showKiwiTooltip() {
         // Clear any existing timeout
@@ -206,6 +216,15 @@
         }, 2000);
       }
       
+      // Mouse hover event
+      kiwiCharacter.addEventListener('mouseenter', function(e) {
+        console.log('🖱️ Mouse entered Kiwi area!');
+      });
+      
+      kiwiCharacter.addEventListener('mouseleave', function(e) {
+        console.log('🖱️ Mouse left Kiwi area!');
+      });
+      
       // Click event on the Kiwi itself
       kiwiCharacter.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -222,6 +241,14 @@
       }, { passive: false });
       
       console.log('🥝 Direct Kiwi character click handler initialized');
+      
+      // Test function
+      window.testKiwi = function() {
+        console.log('🧪 Testing Kiwi element...');
+        kiwiCharacter.style.border = '5px solid red';
+        kiwiCharacter.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+        console.log('🧪 Red border and background added to Kiwi');
+      };
     }
 
     // Initialize when page loads

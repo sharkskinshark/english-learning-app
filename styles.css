@@ -19,16 +19,22 @@ body{
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.3;
+  opacity: 0.8;
   z-index: 100;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   border-radius: 50%;
   pointer-events: auto;
+  /* Add visible debugging border */
+  border: 3px solid rgba(255, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
 }
 
 .kiwi-character:hover {
-  opacity: 0.5;
+  opacity: 1;
+  transform: scale(1.1);
+  border-color: rgba(0, 255, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
 }
 
 /* Disable hover effects on mobile to prevent tooltip conflicts */
