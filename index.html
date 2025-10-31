@@ -10,7 +10,18 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="container">
+  <!-- Halloween Loading Animation (only on 2025/10/31) -->
+  <div id="halloweenLoader" class="halloween-loader">
+    <div class="halloween-emoji" data-emoji="🎃" data-corner="top-left"></div>
+    <div class="halloween-emoji" data-emoji="👻" data-corner="top-right"></div>
+    <div class="halloween-emoji" data-emoji="🦇" data-corner="bottom-left"></div>
+    <div class="halloween-emoji" data-emoji="🕷️" data-corner="bottom-right"></div>
+    <div class="halloween-emoji" data-emoji="🕸️" data-corner="center-left"></div>
+    <div class="halloween-emoji" data-emoji="💀" data-corner="center-right"></div>
+    <div class="halloween-center-text">🎃 Happy Halloween! 🎃</div>
+  </div>
+
+  <main class="container" id="mainContent">
     <h1>Cambridge Vocabulary Practice</h1>
     <h2>Improve your Listening, Spelling and Understanding</h2>
 
@@ -399,6 +410,76 @@
     } else {
       setupKiwiHover();
     }
+    
+    // Halloween Loading Animation (only on 2025/10/31)
+    function initHalloweenAnimation() {
+      const today = new Date();
+      const isHalloween = today.getFullYear() === 2025 && 
+                         today.getMonth() === 9 && // October is month 9 (0-indexed)
+                         today.getDate() === 31;
+      
+      console.log('🎃 Halloween check:', {
+        date: today.toDateString(),
+        isHalloween,
+        year: today.getFullYear(),
+        month: today.getMonth(),
+        day: today.getDate()
+      });
+      
+      if (isHalloween) {
+        const halloweenLoader = document.getElementById('halloweenLoader');
+        const mainContent = document.getElementById('mainContent');
+        const halloweenEmojis = document.querySelectorAll('.halloween-emoji');
+        const centerText = document.querySelector('.halloween-center-text');
+        
+        // Show Halloween loader
+        document.body.classList.add('halloween-active');
+        halloweenLoader.classList.add('active');
+        
+        // Set emoji content
+        halloweenEmojis.forEach(emoji => {
+          emoji.textContent = emoji.getAttribute('data-emoji');
+        });
+        
+        console.log('🎃 Halloween animation started!');
+        
+        // Stage 1: Fly emojis from corners to center (0.8s)
+        setTimeout(() => {
+          halloweenEmojis.forEach((emoji, index) => {
+            setTimeout(() => {
+              emoji.classList.add('fly-in');
+            }, index * 150); // Stagger the animations
+          });
+        }, 500);
+        
+        // Stage 2: Show center text (1.5s after start)
+        setTimeout(() => {
+          centerText.classList.add('show');
+        }, 1500);
+        
+        // Stage 3: Enlarge emojis (2.5s after start)
+        setTimeout(() => {
+          halloweenEmojis.forEach(emoji => {
+            emoji.classList.add('enlarge');
+          });
+        }, 2500);
+        
+        // Stage 4: Fade out and show main content (4s total)
+        setTimeout(() => {
+          halloweenLoader.classList.add('fade-out');
+          mainContent.classList.add('show');
+          
+          // Remove Halloween loader after fade completes
+          setTimeout(() => {
+            document.body.classList.remove('halloween-active');
+            halloweenLoader.remove();
+          }, 800);
+        }, 4000);
+      }
+    }
+    
+    // Initialize Halloween animation on page load
+    initHalloweenAnimation();
   </script>
 </body>
 </html>

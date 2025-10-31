@@ -1,3 +1,122 @@
+/* Halloween Loading Animation (only on 2025/10/31) */
+.halloween-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  z-index: 9999;
+  display: none; /* Hidden by default, shown only on Halloween */
+  overflow: hidden;
+}
+
+.halloween-loader.active {
+  display: block;
+}
+
+.halloween-emoji {
+  position: absolute;
+  font-size: 0px;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 10000;
+}
+
+/* Initial positions for each corner */
+.halloween-emoji[data-corner="top-left"] {
+  top: -50px;
+  left: -50px;
+}
+
+.halloween-emoji[data-corner="top-right"] {
+  top: -50px;
+  right: -50px;
+}
+
+.halloween-emoji[data-corner="bottom-left"] {
+  bottom: -50px;
+  left: -50px;
+}
+
+.halloween-emoji[data-corner="bottom-right"] {
+  bottom: -50px;
+  right: -50px;
+}
+
+.halloween-emoji[data-corner="center-left"] {
+  top: 50%;
+  left: -50px;
+  transform: translateY(-50%);
+}
+
+.halloween-emoji[data-corner="center-right"] {
+  top: 50%;
+  right: -50px;
+  transform: translateY(-50%);
+}
+
+/* Animation states */
+.halloween-emoji.fly-in {
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 60px;
+  opacity: 1;
+  animation: halloweenPulse 1s ease-in-out infinite;
+}
+
+.halloween-emoji.enlarge {
+  font-size: 80px;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.halloween-center-text {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff6b35;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.halloween-center-text.show {
+  opacity: 1;
+}
+
+@keyframes halloweenPulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 107, 53, 0.9));
+  }
+}
+
+.halloween-loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+/* Ensure main content is hidden during Halloween loading */
+.halloween-active #mainContent {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.halloween-active #mainContent.show {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
 :root{--bg:#f7fbff;--card:#fff;--accent:#2b8cf3;--ok:#2dbf6e;--bad:#f44336}
 *{box-sizing:border-box;font-family:Segoe UI,Roboto,Arial,sans-serif}
 html{overflow:visible}
