@@ -317,7 +317,13 @@
 
 :root{--bg:#f7fbff;--card:#fff;--accent:#2b8cf3;--ok:#2dbf6e;--bad:#f44336}
 *{box-sizing:border-box;font-family:Segoe UI,Roboto,Arial,sans-serif}
-html{overflow:visible;scroll-behavior:smooth}
+html{
+  overflow:visible;
+  scroll-behavior:smooth;
+  -webkit-scroll-behavior:smooth; /* Safari iOS */
+  -ms-scroll-behavior:smooth; /* Edge */
+  scroll-padding-top:20px; /* Better centering on iPhone */
+}
 body{
   margin:0;
   background:var(--bg);
@@ -325,6 +331,13 @@ body{
   position:relative;
   overflow:visible;
   scroll-behavior:smooth;
+  -webkit-scroll-behavior:smooth; /* Safari iOS */
+  -ms-scroll-behavior:smooth; /* Edge */
+  scroll-padding-top:20px; /* Better centering on iPhone */
+  /* Enhanced scroll performance for iPhone */
+  -webkit-overflow-scrolling:touch;
+  -webkit-transform:translateZ(0); /* Hardware acceleration */
+  transform:translateZ(0);
 }
 /* Create a clickable Kiwi element instead of using ::before */
 .kiwi-character {
@@ -502,12 +515,29 @@ h1{margin:0 0 12px;font-size:1.6rem}
 }
 .controls select{margin-left:6px;padding:6px}
 button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;
-  /* iPhone touch optimizations */
+  /* iPhone touch optimizations for all browsers */
   -webkit-tap-highlight-color: rgba(0,0,0,0.1);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
+  /* Enhanced iPhone 16 Pro browser compatibility */
+  -webkit-appearance: none; /* Remove Safari default styling */
+  appearance: none; /* Standard property */
+  -webkit-border-radius: 6px; /* Explicit webkit border radius */
+  -webkit-transform: translateZ(0); /* Hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden; /* Smooth animations */
+  -webkit-backface-visibility: hidden;
+  will-change: transform; /* Optimize for changes */
+  /* Ensure proper spacing on iPhone */
+  min-height: 44px; /* Apple's recommended touch target */
+  min-width: 44px;
+  /* Cross-browser transition support */
+  transition: all 0.15s ease;
+  -webkit-transition: all 0.15s ease;
+  -moz-transition: all 0.15s ease;
+  -ms-transition: all 0.15s ease;
 }
 button:disabled{opacity:0.6}
 .exercise{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(33,49,70,0.06)}
@@ -1266,6 +1296,54 @@ input, textarea, select, button {
   
   h1, h2 {
     margin: 5px 0;
+  }
+}
+
+/* iPhone 16 Pro specific optimizations for all browsers */
+@media screen and (max-width: 430px) and (max-height: 932px) {
+  /* Safari, Edge, Chrome on iPhone 16 Pro */
+  html {
+    -webkit-text-size-adjust: 100%; /* Prevent text zoom in Safari */
+    -ms-text-size-adjust: 100%; /* Prevent text zoom in Edge */
+  }
+  
+  body {
+    /* Enhanced scrolling performance */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* Prevent bounce on Chrome */
+    -webkit-overscroll-behavior: contain; /* Prevent bounce on Safari */
+  }
+  
+  button {
+    /* Optimized for iPhone 16 Pro touch across all browsers */
+    min-height: 48px; /* Larger touch target for iPhone 16 Pro */
+    font-size: 16px; /* Prevent zoom on Safari */
+    border: 1px solid transparent; /* Improve Edge rendering */
+    position: relative; /* Better layering */
+    z-index: 1; /* Ensure clickability */
+  }
+  
+  /* Ensure smooth scrolling works on all iPhone browsers */
+  .exercise {
+    scroll-margin-top: 60px; /* Better scroll positioning */
+    -webkit-scroll-margin-top: 60px; /* Safari specific */
+  }
+  
+  /* Optimize Kiwi character for iPhone 16 Pro */
+  .kiwi-character {
+    /* Ensure touch works on all browsers */
+    -webkit-transform: translateZ(0); /* Safari hardware acceleration */
+    transform: translateZ(0); /* Standard hardware acceleration */
+    will-change: transform; /* Optimize for interactions */
+  }
+}
+
+/* High DPI optimization for iPhone 16 Pro Retina display */
+@media screen and (-webkit-min-device-pixel-ratio: 3) {
+  /* Safari/Chrome specific high DPI optimizations */
+  .kiwi-character {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 }
 

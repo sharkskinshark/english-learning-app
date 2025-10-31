@@ -645,43 +645,95 @@ function startSession(){
   }
   exercise.classList.remove('hidden');
   
-  // iPhone auto-scroll to Listen to Word button
+  // Enhanced iPhone auto-scroll for all browsers (Safari, Edge, Chrome)
   const isMobile = window.innerWidth <= 768;
   const isIPhone = /iPhone/i.test(navigator.userAgent);
+  const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome|CriOS|Edge|Edg/i.test(navigator.userAgent);
+  const isEdge = /Edge|Edg/i.test(navigator.userAgent);
+  const isChrome = /CriOS|Chrome/i.test(navigator.userAgent);
   
   if (isMobile || isIPhone) {
-    console.log('📱 iPhone detected - preparing auto-scroll to Listen to Word button');
+    const browserType = isSafari ? 'Safari' : (isEdge ? 'Edge' : (isChrome ? 'Chrome' : 'Unknown'));
+    console.log(`📱 iPhone ${browserType} detected - preparing auto-scroll to Listen to Word button`);
     
     // Small delay to ensure DOM is updated after exercise section becomes visible
     setTimeout(() => {
       const listenWordBtn = document.getElementById('listenWordBtn');
       
       if (listenWordBtn) {
-        console.log('📱 Scrolling to Listen to Word button');
+        console.log(`📱 Scrolling to Listen to Word button on iPhone ${browserType}`);
         
-        // Smooth scroll to center the Listen to Word button on screen
-        listenWordBtn.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'center'
-        });
+        // Method 1: Modern scrollIntoView (Safari, Chrome)
+        if (isSafari || isChrome) {
+          try {
+            listenWordBtn.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'center'
+            });
+            console.log(`📱 ${browserType}: Used scrollIntoView method`);
+          } catch (e) {
+            console.log(`📱 ${browserType}: scrollIntoView failed, using fallback`);
+          }
+        }
         
-        // Alternative method for better iPhone compatibility
-        const buttonRect = listenWordBtn.getBoundingClientRect();
-        const buttonTop = buttonRect.top + window.pageYOffset;
-        const viewportHeight = window.innerHeight;
-        const scrollToPosition = buttonTop - (viewportHeight / 2) + (buttonRect.height / 2);
+        // Method 2: Manual calculation (Better for Edge, fallback for all)
+        setTimeout(() => {
+          const buttonRect = listenWordBtn.getBoundingClientRect();
+          const buttonTop = buttonRect.top + window.pageYOffset;
+          const viewportHeight = window.innerHeight;
+          const scrollToPosition = buttonTop - (viewportHeight / 2) + (buttonRect.height / 2);
+          
+          // Enhanced scrolling with browser-specific optimizations
+          if (isEdge) {
+            // Edge on iPhone sometimes needs explicit smooth scrolling
+            window.scrollTo({
+              top: scrollToPosition,
+              behavior: 'smooth'
+            });
+            console.log(`📱 Edge: Used manual scroll to position:`, scrollToPosition);
+          } else if (isSafari) {
+            // Safari iOS - use both methods for reliability
+            window.scrollTo({
+              top: scrollToPosition,
+              behavior: 'smooth'
+            });
+            console.log(`📱 Safari: Used enhanced scroll to position:`, scrollToPosition);
+          } else if (isChrome) {
+            // Chrome on iPhone - prefer smooth scrolling
+            window.scrollTo({
+              top: scrollToPosition,
+              behavior: 'smooth'
+            });
+            console.log(`📱 Chrome: Used smooth scroll to position:`, scrollToPosition);
+          } else {
+            // Fallback for any other browser
+            window.scrollTo({
+              top: scrollToPosition,
+              behavior: 'smooth'
+            });
+            console.log(`📱 Fallback: Used scroll to position:`, scrollToPosition);
+          }
+          
+          // Additional verification for iPhone browsers
+          setTimeout(() => {
+            const currentScroll = window.pageYOffset;
+            const targetReached = Math.abs(currentScroll - scrollToPosition) < 50;
+            console.log(`📱 ${browserType}: Scroll verification - Target: ${scrollToPosition}, Current: ${currentScroll}, Success: ${targetReached}`);
+            
+            // Final fallback if scroll didn't work
+            if (!targetReached) {
+              console.log(`📱 ${browserType}: Applying final fallback scroll`);
+              window.scrollTo(0, scrollToPosition);
+            }
+          }, 800);
+          
+        }, 100); // Secondary delay for Edge compatibility
         
-        window.scrollTo({
-          top: scrollToPosition,
-          behavior: 'smooth'
-        });
-        
-        console.log('📱 Auto-scroll completed to position:', scrollToPosition);
       } else {
         console.log('⚠️ Listen to Word button not found for auto-scroll');
       }
-    }, 300); // 300ms delay to ensure DOM is ready
+    }, 300); // Primary delay to ensure DOM is ready
   }
   
   feedbackEl.textContent = '';
