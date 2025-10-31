@@ -528,25 +528,26 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   transform: translate(-50%, -50%);
   background: linear-gradient(135deg, #85d639, #6fb82e);
   color: white;
-  padding: 15px 20px;
+  padding: 20px 25px;
   border-radius: 15px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
   border: 3px solid #fff;
-  max-width: 300px;
+  max-width: 400px;
+  line-height: 1.5;
   word-wrap: break-word;
 }
 
 #kiwiTooltip.show {
   opacity: 1;
   visibility: visible;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 .reset-btn:active {

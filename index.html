@@ -180,14 +180,23 @@
   <div class="kiwi-character" id="kiwiCharacter"></div>
 
   <!-- Kiwi Tooltip -->
-  <div id="kiwiTooltip">Hey, I'm Kiwi. A Second Grade student in the Elementary School in Taipei City, Taiwan. OCT.2025</div>
+  <div id="kiwiTooltip">
+    1. Select the first Mode Box, then the second Mode Box.<br>
+    2. Choose Level, then Category.<br>
+    3. Press "Start Practice" Blue Button.<br>
+    4. Press "Listen to Word" White Button.<br>
+    5. Type in your spelling text, press "Check Answer" Blue Button.<br>
+    6. Press "Next" Blue Button for next Vocabulary.<br><br>
+    Press anywhere on the screen to exit the instruction and start test.
+  </div>
 
   <script>
-    // Kiwi character hover handler - show tooltip on hover only
+    // Kiwi character hover handler - show instructions on hover
     function setupKiwiHover() {
       const kiwiCharacter = document.getElementById('kiwiCharacter');
       const tooltip = document.getElementById('kiwiTooltip');
       let tooltipTimeout;
+      let isTooltipVisible = false;
       
       // Check if element exists
       if (!kiwiCharacter) {
@@ -205,35 +214,53 @@
         
         // Show tooltip
         tooltip.classList.add('show');
-        console.log('🥝 Kiwi tooltip shown on hover');
+        isTooltipVisible = true;
+        console.log('🥝 Kiwi instructions shown');
       }
       
       function hideKiwiTooltip() {
         tooltip.classList.remove('show');
-        console.log('🥝 Kiwi tooltip hidden');
+        isTooltipVisible = false;
+        if (tooltipTimeout) {
+          clearTimeout(tooltipTimeout);
+        }
+        console.log('🥝 Kiwi instructions hidden');
       }
       
       // Mouse hover events
       kiwiCharacter.addEventListener('mouseenter', function(e) {
         showKiwiTooltip();
-        console.log('🖱️ Mouse entered Kiwi - showing tooltip');
+        console.log('🖱️ Mouse entered Kiwi - showing instructions');
       });
       
       kiwiCharacter.addEventListener('mouseleave', function(e) {
         hideKiwiTooltip();
-        console.log('🖱️ Mouse left Kiwi - hiding tooltip');
+        console.log('🖱️ Mouse left Kiwi - hiding instructions');
       });
       
       // Touch events for mobile
       kiwiCharacter.addEventListener('touchstart', function(e) {
         e.preventDefault();
+        e.stopPropagation();
         showKiwiTooltip();
-        // Auto-hide after 2 seconds on mobile
-        tooltipTimeout = setTimeout(() => {
-          hideKiwiTooltip();
-        }, 2000);
-        console.log('📱 Touch started - showing tooltip for 2 seconds');
+        console.log('📱 Touch started - showing instructions');
       }, { passive: false });
+      
+      // Click anywhere on screen to dismiss tooltip
+      document.addEventListener('click', function(e) {
+        if (isTooltipVisible && e.target !== kiwiCharacter && !kiwiCharacter.contains(e.target)) {
+          hideKiwiTooltip();
+          console.log('👆 Clicked elsewhere - hiding instructions');
+        }
+      });
+      
+      // Touch anywhere on screen to dismiss tooltip
+      document.addEventListener('touchstart', function(e) {
+        if (isTooltipVisible && e.target !== kiwiCharacter && !kiwiCharacter.contains(e.target)) {
+          hideKiwiTooltip();
+          console.log('📱 Touched elsewhere - hiding instructions');
+        }
+      });
     }
 
     // Initialize when page loads
