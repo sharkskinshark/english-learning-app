@@ -254,13 +254,6 @@
           const screenHeight = window.innerHeight;
           console.log('📱 Screen dimensions:', screenWidth, 'x', screenHeight);
           
-          // Get Kiwi position for flying animation
-          const kiwiRect = kiwiCharacter.getBoundingClientRect();
-          const kiwiCenterX = kiwiRect.left + kiwiRect.width / 2;
-          const kiwiCenterY = kiwiRect.top + kiwiRect.height / 2;
-          
-          console.log('🥝 Kiwi position:', kiwiCenterX, kiwiCenterY);
-          
           // Calculate safe dimensions
           const safeWidth = Math.min(screenWidth - 30, 400);
           const safeHeight = screenHeight - 60;
@@ -274,30 +267,7 @@
           tooltip.style.transform = 'translate(-50%, -50%)';
           tooltip.style.margin = '0';
           
-          // Create custom flying animation based on actual Kiwi position
-          const centerX = screenWidth / 2;
-          const centerY = screenHeight / 2;
-          const startOffsetX = ((kiwiCenterX - centerX) / centerX) * 50; // Convert to percentage
-          const startOffsetY = ((kiwiCenterY - centerY) / centerY) * 50; // Convert to percentage
-          
-          // Create dynamic keyframes for this specific position
-          const style = document.createElement('style');
-          style.setAttribute('data-dynamic-flying', 'true');
-          style.textContent = `
-            @keyframes flyFromKiwiDynamic {
-              0% {
-                opacity: 0;
-                transform: translate(calc(-50% + ${startOffsetX}vw), calc(-50% + ${startOffsetY}vh)) scale(0.2);
-              }
-              100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.02);
-              }
-            }
-          `;
-          document.head.appendChild(style);
-          
-          console.log('📱 Flying animation created from Kiwi position:', startOffsetX, startOffsetY);
+          console.log('📱 Tooltip size adjusted for mobile:', safeWidth, 'x', safeHeight);
         } else {
           // Desktop - reset to CSS defaults
           tooltip.style.maxWidth = '';
@@ -309,9 +279,6 @@
           tooltip.style.margin = '';
           console.log('🖥️ Tooltip reset for desktop');
         }
-        
-        // Add flying animation class
-        tooltip.classList.add('fly-from-kiwi');
         
         // Show tooltip
         tooltip.classList.add('show');
@@ -336,17 +303,9 @@
       
       function hideKiwiTooltip() {
         tooltip.classList.remove('show');
-        tooltip.classList.remove('fly-from-kiwi');
         isTooltipVisible = false;
         kiwiCharacter.classList.remove('mobile-heartbeat');
         console.log('💓 Heartbeat animation stopped, classes:', kiwiCharacter.className);
-        
-        // Clean up dynamic flying animation styles
-        const dynamicStyle = document.querySelector('style[data-dynamic-flying]');
-        if (dynamicStyle) {
-          dynamicStyle.remove();
-          console.log('🗑️ Dynamic flying style cleaned up');
-        }
         
         if (stageTimeout) {
           clearTimeout(stageTimeout);
