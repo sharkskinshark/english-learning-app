@@ -418,8 +418,11 @@
                          today.getMonth() === 9 && // October is month 9 (0-indexed)
                          today.getDate() === 31;
       
-      // Edge browser detection (including mobile Edge)
+      // Enhanced browser detection (including iPhone Safari)
       const isEdge = /Edge|Edg/i.test(navigator.userAgent);
+      const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome|CriOS|Edge|Edg/i.test(navigator.userAgent);
+      const isIPhone = /iPhone/i.test(navigator.userAgent);
+      const isIPhoneSafari = isIPhone && isSafari;
       const isMobileEdge = isEdge && (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 768);
       
       console.log('🎃 Halloween check:', {
@@ -431,7 +434,10 @@
         userAgent: navigator.userAgent,
         screenSize: window.innerWidth + 'x' + window.innerHeight,
         isEdge: isEdge,
-        isMobileEdge: isMobileEdge
+        isMobileEdge: isMobileEdge,
+        isSafari: isSafari,
+        isIPhone: isIPhone,
+        isIPhoneSafari: isIPhoneSafari
       });
       
       if (isHalloween) {
@@ -445,7 +451,7 @@
           content: !!mainContent,
           emojis: halloweenEmojis.length,
           text: !!centerText,
-          browser: isEdge ? (isMobileEdge ? 'Mobile Edge' : 'Desktop Edge') : 'Other'
+          browser: isIPhoneSafari ? 'iPhone Safari' : (isEdge ? (isMobileEdge ? 'Mobile Edge' : 'Desktop Edge') : (isSafari ? 'Safari' : 'Other'))
         });
         
         // Show Halloween loader with Edge-specific handling
@@ -462,29 +468,51 @@
         halloweenLoader.style.width = '100vw';
         halloweenLoader.style.height = '100vh';
         
-        // Edge-specific background fix (including mobile)
+        // Enhanced background fix for all browsers including iPhone Safari
         if (isEdge) {
           halloweenLoader.style.background = '#1a1a2e';
           halloweenLoader.style.backgroundColor = '#1a1a2e';
           console.log('🎃', isMobileEdge ? 'Mobile Edge' : 'Desktop Edge', 'browser detected - applied background fix');
+        } else if (isIPhoneSafari) {
+          // iPhone Safari specific optimizations
+          halloweenLoader.style.background = '-webkit-linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';
+          halloweenLoader.style.backgroundColor = '#1a1a2e';
+          halloweenLoader.style.webkitBackgroundSize = '100% 100%';
+          halloweenLoader.style.webkitOverflowScrolling = 'touch';
+          console.log('🎃 iPhone Safari detected - applied webkit optimizations');
+        } else if (isSafari) {
+          // General Safari optimizations
+          halloweenLoader.style.background = '-webkit-linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)';
+          console.log('🎃 Safari browser detected - applied webkit background');
         }
         
-        // Set emoji content with Edge-specific handling
+        // Set emoji content with iPhone Safari specific handling
         halloweenEmojis.forEach((emoji, index) => {
           const emojiChar = emoji.getAttribute('data-emoji');
           emoji.textContent = emojiChar;
           emoji.innerHTML = emojiChar; // Fallback for Edge
           
-          // Force initial positioning for Edge
+          // Force initial positioning with iPhone Safari optimizations
           emoji.style.position = 'absolute';
           emoji.style.zIndex = '10000';
           emoji.style.fontSize = '0px';
           emoji.style.opacity = '0';
           
+          // iPhone Safari specific fixes
+          if (isIPhoneSafari) {
+            emoji.style.webkitTransform = 'translate3d(0,0,0)';
+            emoji.style.webkitBackfaceVisibility = 'hidden';
+            emoji.style.webkitPerspective = '1000px';
+            emoji.style.webkitTextSizeAdjust = 'none';
+          }
+          
           console.log(`🎃 Emoji ${index}:`, emojiChar, emoji.textContent);
         });
         
-        console.log('🎃 Halloween animation started on', isEdge ? (isMobileEdge ? 'Mobile Edge browser!' : 'Desktop Edge browser!') : 'browser!');
+        console.log('🎃 Halloween animation started on', 
+          isIPhoneSafari ? 'iPhone Safari!' : 
+          (isEdge ? (isMobileEdge ? 'Mobile Edge browser!' : 'Desktop Edge browser!') : 
+          (isSafari ? 'Safari browser!' : 'browser!')));
         
         // Stage 1: Fly emojis from corners to center (0.8s)
         setTimeout(() => {
@@ -494,7 +522,7 @@
               emoji.classList.add('fly-in');
               console.log(`🎃 Emoji ${index} flying in`);
               
-              // Force style for Edge and mobile compatibility
+              // Force style for Edge, Safari, and mobile compatibility
               const isMobile = window.innerWidth <= 768;
               const fontSize = isMobile ? '50px' : '60px';
               
@@ -507,14 +535,21 @@
               emoji.style.position = 'absolute';
               emoji.style.zIndex = '10000';
               
-              // Edge-specific transform with mobile support
-              if (isEdge) {
+              // Browser-specific transform handling
+              if (isIPhoneSafari) {
+                emoji.style.webkitTransform = 'translate(-50%, -50%) translate3d(0,0,0)';
+                emoji.style.transform = 'translate(-50%, -50%)';
+                emoji.style.webkitBackfaceVisibility = 'hidden';
+              } else if (isEdge) {
                 emoji.style.transform = 'translate(-50%, -50%)';
                 emoji.style.msTransform = 'translate(-50%, -50%)';
-                emoji.style.webkitTransform = 'translate(-50%, -50%)'; // Also add webkit for mobile Edge
+                emoji.style.webkitTransform = 'translate(-50%, -50%)';
+              } else if (isSafari) {
+                emoji.style.webkitTransform = 'translate(-50%, -50%)';
+                emoji.style.transform = 'translate(-50%, -50%)';
               } else {
                 emoji.style.transform = 'translate(-50%, -50%)';
-                emoji.style.webkitTransform = 'translate(-50%, -50%)'; // Mobile Safari/Chrome
+                emoji.style.webkitTransform = 'translate(-50%, -50%)';
               }
             }, index * 150); // Stagger the animations
           });
@@ -534,61 +569,91 @@
             emoji.classList.add('move-to-corner');
             const corner = emoji.getAttribute('data-corner');
             
-            // Set specific corner positions with Edge and mobile compatibility
+            // Set specific corner positions with iPhone Safari, Edge and mobile compatibility
             switch(corner) {
               case 'top-left':
                 emoji.style.top = '0px';
                 emoji.style.left = '0px';
                 emoji.style.right = 'auto';
                 emoji.style.bottom = 'auto';
-                emoji.style.transform = 'translate(0%, 0%)';
-                emoji.style.webkitTransform = 'translate(0%, 0%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, 0%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, 0%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, 0%)';
+                  emoji.style.webkitTransform = 'translate(0%, 0%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                }
                 break;
               case 'top-right':
                 emoji.style.top = '0px';
                 emoji.style.right = '0px';
                 emoji.style.left = 'auto';
                 emoji.style.bottom = 'auto';
-                emoji.style.transform = 'translate(0%, 0%)';
-                emoji.style.webkitTransform = 'translate(0%, 0%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, 0%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, 0%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, 0%)';
+                  emoji.style.webkitTransform = 'translate(0%, 0%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                }
                 break;
               case 'bottom-left':
                 emoji.style.bottom = '0px';
                 emoji.style.left = '0px';
                 emoji.style.top = 'auto';
                 emoji.style.right = 'auto';
-                emoji.style.transform = 'translate(0%, 0%)';
-                emoji.style.webkitTransform = 'translate(0%, 0%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, 0%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, 0%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, 0%)';
+                  emoji.style.webkitTransform = 'translate(0%, 0%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                }
                 break;
               case 'bottom-right':
                 emoji.style.bottom = '0px';
                 emoji.style.right = '0px';
                 emoji.style.top = 'auto';
                 emoji.style.left = 'auto';
-                emoji.style.transform = 'translate(0%, 0%)';
-                emoji.style.webkitTransform = 'translate(0%, 0%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, 0%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, 0%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, 0%)';
+                  emoji.style.webkitTransform = 'translate(0%, 0%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
+                }
                 break;
               case 'center-left':
                 emoji.style.top = '50%';
                 emoji.style.left = '0px';
                 emoji.style.right = 'auto';
                 emoji.style.bottom = 'auto';
-                emoji.style.transform = 'translate(0%, -50%)';
-                emoji.style.webkitTransform = 'translate(0%, -50%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, -50%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, -50%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, -50%)';
+                  emoji.style.webkitTransform = 'translate(0%, -50%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
+                }
                 break;
               case 'center-right':
                 emoji.style.top = '50%';
                 emoji.style.right = '0px';
                 emoji.style.left = 'auto';
                 emoji.style.bottom = 'auto';
-                emoji.style.transform = 'translate(0%, -50%)';
-                emoji.style.webkitTransform = 'translate(0%, -50%)';
-                if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
+                if (isIPhoneSafari) {
+                  emoji.style.webkitTransform = 'translate(0%, -50%) translate3d(0,0,0)';
+                  emoji.style.transform = 'translate(0%, -50%)';
+                } else {
+                  emoji.style.transform = 'translate(0%, -50%)';
+                  emoji.style.webkitTransform = 'translate(0%, -50%)';
+                  if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
+                }
                 break;
             }
             console.log(`🎃 Emoji ${index} (${corner}) moved to corner`);
@@ -600,20 +665,25 @@
           console.log('🎃 Stage 4: Enlarging emojis to giant size');
           halloweenEmojis.forEach((emoji, index) => {
             emoji.classList.add('enlarge-giant');
-            // Force giant size for mobile and Edge compatibility
+            // Force giant size for mobile, Edge, and iPhone Safari compatibility
             const isMobile = window.innerWidth <= 768;
             const giantSize = isMobile ? '500px' : '600px';
             emoji.style.fontSize = giantSize;
             emoji.style.opacity = '0.8';
             
-            // Ensure transforms are applied for all browsers
+            // Ensure transforms are applied for all browsers including iPhone Safari
             const currentTransform = emoji.style.transform;
-            emoji.style.webkitTransform = currentTransform;
-            if (isEdge) {
-              emoji.style.msTransform = currentTransform;
+            if (isIPhoneSafari) {
+              emoji.style.webkitTransform = currentTransform + ' translate3d(0,0,0)';
+              emoji.style.webkitBackfaceVisibility = 'hidden';
+            } else {
+              emoji.style.webkitTransform = currentTransform;
+              if (isEdge) {
+                emoji.style.msTransform = currentTransform;
+              }
             }
             
-            console.log(`🎃 Emoji ${index} enlarged to giant size: ${giantSize} (Mobile: ${isMobile}, Edge: ${isEdge})`);
+            console.log(`🎃 Emoji ${index} enlarged to giant size: ${giantSize} (Mobile: ${isMobile}, iPhone Safari: ${isIPhoneSafari}, Edge: ${isEdge})`);
           });
         }, 4000);
         
