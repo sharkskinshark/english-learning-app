@@ -50,6 +50,11 @@ body{
   animation: heartbeat 0.8s ease-in-out infinite;
 }
 
+/* Mobile heartbeat animation (for touch devices) */
+.kiwi-character.mobile-heartbeat {
+  animation: heartbeat 0.8s ease-in-out infinite;
+}
+
 /* Disable hover effects on mobile to prevent tooltip conflicts */
 @media (hover: hover) {
   /* Removed old body::before hover - now using .kiwi-character */
