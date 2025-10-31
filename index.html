@@ -183,8 +183,8 @@
   <div id="kiwiTooltip">Hey, I'm Kiwi. A Second Grade student in the Elementary School in Taipei City, Taiwan. OCT.2025</div>
 
   <script>
-    // Direct Kiwi character click handler with debugging
-    function setupKiwiClick() {
+    // Kiwi character hover handler - show tooltip on hover only
+    function setupKiwiHover() {
       const kiwiCharacter = document.getElementById('kiwiCharacter');
       const tooltip = document.getElementById('kiwiTooltip');
       let tooltipTimeout;
@@ -195,9 +195,7 @@
         return;
       }
       
-      console.log('✅ Kiwi character element found:', kiwiCharacter);
-      console.log('📍 Kiwi position:', window.getComputedStyle(kiwiCharacter).position);
-      console.log('📏 Kiwi size:', kiwiCharacter.offsetWidth, 'x', kiwiCharacter.offsetHeight);
+      console.log('✅ Kiwi character hover handler initialized');
       
       function showKiwiTooltip() {
         // Clear any existing timeout
@@ -207,55 +205,42 @@
         
         // Show tooltip
         tooltip.classList.add('show');
-        console.log('🥝 Kiwi says hello!');
-        
-        // Auto-hide after 2 seconds
-        tooltipTimeout = setTimeout(() => {
-          tooltip.classList.remove('show');
-          console.log('🥝 Kiwi says goodbye!');
-        }, 2000);
+        console.log('🥝 Kiwi tooltip shown on hover');
       }
       
-      // Mouse hover event
+      function hideKiwiTooltip() {
+        tooltip.classList.remove('show');
+        console.log('🥝 Kiwi tooltip hidden');
+      }
+      
+      // Mouse hover events
       kiwiCharacter.addEventListener('mouseenter', function(e) {
-        console.log('🖱️ Mouse entered Kiwi area!');
+        showKiwiTooltip();
+        console.log('🖱️ Mouse entered Kiwi - showing tooltip');
       });
       
       kiwiCharacter.addEventListener('mouseleave', function(e) {
-        console.log('🖱️ Mouse left Kiwi area!');
+        hideKiwiTooltip();
+        console.log('🖱️ Mouse left Kiwi - hiding tooltip');
       });
       
-      // Click event on the Kiwi itself
-      kiwiCharacter.addEventListener('click', function(e) {
-        e.stopPropagation();
-        showKiwiTooltip();
-        console.log('✅ Kiwi character clicked directly!');
-      });
-      
-      // Touch event on the Kiwi itself
+      // Touch events for mobile
       kiwiCharacter.addEventListener('touchstart', function(e) {
         e.preventDefault();
-        e.stopPropagation();
         showKiwiTooltip();
-        console.log('✅ Kiwi character touched directly!');
+        // Auto-hide after 2 seconds on mobile
+        tooltipTimeout = setTimeout(() => {
+          hideKiwiTooltip();
+        }, 2000);
+        console.log('📱 Touch started - showing tooltip for 2 seconds');
       }, { passive: false });
-      
-      console.log('🥝 Direct Kiwi character click handler initialized');
-      
-      // Test function
-      window.testKiwi = function() {
-        console.log('🧪 Testing Kiwi element...');
-        kiwiCharacter.style.border = '5px solid red';
-        kiwiCharacter.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
-        console.log('🧪 Red border and background added to Kiwi');
-      };
     }
 
     // Initialize when page loads
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', setupKiwiClick);
+      document.addEventListener('DOMContentLoaded', setupKiwiHover);
     } else {
-      setupKiwiClick();
+      setupKiwiHover();
     }
   </script>
 </body>

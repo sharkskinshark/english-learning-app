@@ -19,7 +19,7 @@ body{
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.3;
+  opacity: 1;
   z-index: 1000;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -28,8 +28,7 @@ body{
 }
 
 .kiwi-character:hover {
-  opacity: 0.6;
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 /* Disable hover effects on mobile to prevent tooltip conflicts */
