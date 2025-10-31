@@ -123,6 +123,16 @@ const PROGRESS_KEY = 'englishAppProgress';
 const modeSelect = document.getElementById('modeSelect');
 const levelSelect = document.getElementById('levelSelect');
 const startBtn = document.getElementById('startBtn');
+console.log('🔍 Start button found:', !!startBtn, startBtn);
+if (startBtn) {
+  console.log('🔍 Start button properties:', {
+    disabled: startBtn.disabled,
+    hidden: startBtn.classList.contains('hidden'),
+    display: window.getComputedStyle(startBtn).display,
+    visibility: window.getComputedStyle(startBtn).visibility,
+    zIndex: window.getComputedStyle(startBtn).zIndex
+  });
+}
 const progressSection = document.getElementById('progressSection');
 const showProgressBtn = document.getElementById('showProgress');
 const listenWordBtn = document.getElementById('listenWordBtn');
@@ -857,14 +867,56 @@ startBtn.addEventListener('click', ()=>{
   startSession();
 });
 
+// Enhanced iPhone touch support for Start Practice button
+startBtn.addEventListener('touchstart', function(e) {
+  console.log('📱 Start button touch started');
+  e.preventDefault();
+}, { passive: false });
+
+startBtn.addEventListener('touchend', function(e) {
+  console.log('📱 Start button touch ended');
+  e.preventDefault();
+  
+  // Check if vocab is loaded and button is not disabled
+  if(!vocab || Object.keys(vocab).length===0){
+    promptEl.textContent = 'Vocabulary not loaded yet.';
+    return;
+  }
+  
+  if (!startBtn.disabled) {
+    console.log('📱 Starting session via touch');
+    startSession();
+  }
+}, { passive: false });
+
 listenWordBtn.addEventListener('click', () => {
   const current = session.words[session.index];
   speakWord(current.word);
 });
 
 submitSpelling.addEventListener('click', ()=>{checkSpelling();});
+
+// Enhanced iPhone touch support for Check Answer button
+submitSpelling.addEventListener('touchend', function(e) {
+  console.log('📱 Check Answer button touched');
+  e.preventDefault();
+  if (!submitSpelling.disabled) {
+    checkSpelling();
+  }
+}, { passive: false });
+
 spellingInput.addEventListener('keydown',(e)=>{if(e.key==='Enter'){checkSpelling();}});
 nextBtn.addEventListener('click', ()=>{next();});
+
+// Enhanced iPhone touch support for Next button
+nextBtn.addEventListener('touchend', function(e) {
+  console.log('📱 Next button touched');
+  e.preventDefault();
+  if (!nextBtn.disabled && !nextBtn.classList.contains('hidden')) {
+    next();
+  }
+}, { passive: false });
+
 restartBtn.addEventListener('click', ()=>{startSession();});
 
 // Mode selection handling
