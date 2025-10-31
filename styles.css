@@ -5,15 +5,22 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  background: #1a1a2e; /* Fallback solid color for Edge */
+  background: -ms-linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* IE/Edge fallback */
+  background: -webkit-linear-gradient(135deg, #1a1a2e, #16213e, #0f3460); /* Webkit fallback */
   background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
   z-index: 9999;
   display: none; /* Hidden by default, shown only on Halloween */
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
+  /* Edge specific fixes */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .halloween-loader.active {
   display: block !important;
+  visibility: visible !important;
 }
 
 .halloween-emoji {
@@ -21,10 +28,15 @@
   font-size: 0px;
   opacity: 0;
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  -webkit-transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  -ms-transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 10000;
   -webkit-transform: translate3d(0,0,0);
+  -ms-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
   will-change: transform, opacity, font-size;
+  /* Edge specific fixes */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 
 /* Initial positions for each corner */
@@ -68,10 +80,14 @@
   bottom: auto !important;
   transform: translate(-50%, -50%) !important;
   -webkit-transform: translate(-50%, -50%) !important;
+  -ms-transform: translate(-50%, -50%) !important;
   font-size: 60px;
   opacity: 1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity=100);
   animation: halloweenPulse 1s ease-in-out infinite;
   -webkit-animation: halloweenPulse 1s ease-in-out infinite;
+  -ms-animation: halloweenPulse 1s ease-in-out infinite;
 }
 
 .halloween-emoji.move-to-corner {
@@ -79,6 +95,7 @@
   opacity: 1;
   transition: all 1.2s ease-in-out;
   -webkit-transition: all 1.2s ease-in-out;
+  -ms-transition: all 1.2s ease-in-out;
 }
 
 .halloween-emoji.enlarge-giant {
@@ -86,8 +103,10 @@
   opacity: 0.8;
   animation: halloweenGiantPulse 2s ease-in-out infinite;
   -webkit-animation: halloweenGiantPulse 2s ease-in-out infinite;
+  -ms-animation: halloweenGiantPulse 2s ease-in-out infinite;
   transition: all 1.5s ease-in-out;
   -webkit-transition: all 1.5s ease-in-out;
+  -ms-transition: all 1.5s ease-in-out;
 }
 
 /* Giant corner positions */
@@ -96,6 +115,7 @@
   left: 0px !important;
   transform: translate(0%, 0%) !important;
   -webkit-transform: translate(0%, 0%) !important;
+  -ms-transform: translate(0%, 0%) !important;
 }
 
 .halloween-emoji[data-corner="top-right"].move-to-corner {
@@ -104,6 +124,7 @@
   left: auto !important;
   transform: translate(0%, 0%) !important;
   -webkit-transform: translate(0%, 0%) !important;
+  -ms-transform: translate(0%, 0%) !important;
 }
 
 .halloween-emoji[data-corner="bottom-left"].move-to-corner {
@@ -112,6 +133,7 @@
   top: auto !important;
   transform: translate(0%, 0%) !important;
   -webkit-transform: translate(0%, 0%) !important;
+  -ms-transform: translate(0%, 0%) !important;
 }
 
 .halloween-emoji[data-corner="bottom-right"].move-to-corner {
@@ -121,6 +143,7 @@
   left: auto !important;
   transform: translate(0%, 0%) !important;
   -webkit-transform: translate(0%, 0%) !important;
+  -ms-transform: translate(0%, 0%) !important;
 }
 
 .halloween-emoji[data-corner="center-left"].move-to-corner {
@@ -129,6 +152,7 @@
   right: auto !important;
   transform: translate(0%, -50%) !important;
   -webkit-transform: translate(0%, -50%) !important;
+  -ms-transform: translate(0%, -50%) !important;
 }
 
 .halloween-emoji[data-corner="center-right"].move-to-corner {
@@ -137,6 +161,7 @@
   left: auto !important;
   transform: translate(0%, -50%) !important;
   -webkit-transform: translate(0%, -50%) !important;
+  -ms-transform: translate(0%, -50%) !important;
 }
 
 .halloween-center-text {
