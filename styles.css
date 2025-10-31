@@ -74,10 +74,69 @@
   -webkit-animation: halloweenPulse 1s ease-in-out infinite;
 }
 
-.halloween-emoji.enlarge {
-  font-size: 80px !important;
-  transform: translate(-50%, -50%) scale(1.2) !important;
-  -webkit-transform: translate(-50%, -50%) scale(1.2) !important;
+.halloween-emoji.move-to-corner {
+  font-size: 60px;
+  opacity: 1;
+  transition: all 1.2s ease-in-out;
+  -webkit-transition: all 1.2s ease-in-out;
+}
+
+.halloween-emoji.enlarge-giant {
+  font-size: 600px !important; /* 10 times bigger than 60px */
+  opacity: 0.8;
+  animation: halloweenGiantPulse 2s ease-in-out infinite;
+  -webkit-animation: halloweenGiantPulse 2s ease-in-out infinite;
+  transition: all 1.5s ease-in-out;
+  -webkit-transition: all 1.5s ease-in-out;
+}
+
+/* Giant corner positions */
+.halloween-emoji[data-corner="top-left"].move-to-corner {
+  top: 0px !important;
+  left: 0px !important;
+  transform: translate(0%, 0%) !important;
+  -webkit-transform: translate(0%, 0%) !important;
+}
+
+.halloween-emoji[data-corner="top-right"].move-to-corner {
+  top: 0px !important;
+  right: 0px !important;
+  left: auto !important;
+  transform: translate(0%, 0%) !important;
+  -webkit-transform: translate(0%, 0%) !important;
+}
+
+.halloween-emoji[data-corner="bottom-left"].move-to-corner {
+  bottom: 0px !important;
+  left: 0px !important;
+  top: auto !important;
+  transform: translate(0%, 0%) !important;
+  -webkit-transform: translate(0%, 0%) !important;
+}
+
+.halloween-emoji[data-corner="bottom-right"].move-to-corner {
+  bottom: 0px !important;
+  right: 0px !important;
+  top: auto !important;
+  left: auto !important;
+  transform: translate(0%, 0%) !important;
+  -webkit-transform: translate(0%, 0%) !important;
+}
+
+.halloween-emoji[data-corner="center-left"].move-to-corner {
+  top: 50% !important;
+  left: 0px !important;
+  right: auto !important;
+  transform: translate(0%, -50%) !important;
+  -webkit-transform: translate(0%, -50%) !important;
+}
+
+.halloween-emoji[data-corner="center-right"].move-to-corner {
+  top: 50% !important;
+  right: 0px !important;
+  left: auto !important;
+  transform: translate(0%, -50%) !important;
+  -webkit-transform: translate(0%, -50%) !important;
 }
 
 .halloween-center-text {
@@ -119,6 +178,36 @@
   }
 }
 
+@keyframes halloweenGiantPulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 30px rgba(255, 107, 53, 0.8));
+    -webkit-filter: brightness(1) drop-shadow(0 0 30px rgba(255, 107, 53, 0.8));
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.3) drop-shadow(0 0 50px rgba(255, 107, 53, 1));
+    -webkit-filter: brightness(1.3) drop-shadow(0 0 50px rgba(255, 107, 53, 1));
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+  }
+}
+
+@-webkit-keyframes halloweenGiantPulse {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 30px rgba(255, 107, 53, 0.8));
+    -webkit-filter: brightness(1) drop-shadow(0 0 30px rgba(255, 107, 53, 0.8));
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.3) drop-shadow(0 0 50px rgba(255, 107, 53, 1));
+    -webkit-filter: brightness(1.3) drop-shadow(0 0 50px rgba(255, 107, 53, 1));
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+  }
+}
+
 .halloween-loader.fade-out {
   opacity: 0;
   visibility: hidden;
@@ -150,8 +239,8 @@
     font-size: 50px !important;
   }
   
-  .halloween-emoji.enlarge {
-    font-size: 70px !important;
+  .halloween-emoji.enlarge-giant {
+    font-size: 500px !important; /* 10 times bigger for mobile */
   }
   
   .halloween-center-text {

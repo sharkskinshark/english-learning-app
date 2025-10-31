@@ -486,20 +486,79 @@
           centerText.style.opacity = '1';
         }, 1500);
         
-        // Stage 3: Enlarge emojis (2.5s after start)
+        // Stage 3: Move emojis back to corners (2.5s after start)
         setTimeout(() => {
-          console.log('🎃 Stage 3: Enlarging emojis');
+          console.log('🎃 Stage 3: Moving emojis back to corners');
           halloweenEmojis.forEach((emoji, index) => {
-            emoji.classList.add('enlarge');
-            emoji.style.fontSize = '70px';
-            emoji.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            console.log(`🎃 Emoji ${index} enlarged`);
+            emoji.classList.add('move-to-corner');
+            const corner = emoji.getAttribute('data-corner');
+            
+            // Set specific corner positions
+            switch(corner) {
+              case 'top-left':
+                emoji.style.top = '0px';
+                emoji.style.left = '0px';
+                emoji.style.right = 'auto';
+                emoji.style.bottom = 'auto';
+                emoji.style.transform = 'translate(0%, 0%)';
+                break;
+              case 'top-right':
+                emoji.style.top = '0px';
+                emoji.style.right = '0px';
+                emoji.style.left = 'auto';
+                emoji.style.bottom = 'auto';
+                emoji.style.transform = 'translate(0%, 0%)';
+                break;
+              case 'bottom-left':
+                emoji.style.bottom = '0px';
+                emoji.style.left = '0px';
+                emoji.style.top = 'auto';
+                emoji.style.right = 'auto';
+                emoji.style.transform = 'translate(0%, 0%)';
+                break;
+              case 'bottom-right':
+                emoji.style.bottom = '0px';
+                emoji.style.right = '0px';
+                emoji.style.top = 'auto';
+                emoji.style.left = 'auto';
+                emoji.style.transform = 'translate(0%, 0%)';
+                break;
+              case 'center-left':
+                emoji.style.top = '50%';
+                emoji.style.left = '0px';
+                emoji.style.right = 'auto';
+                emoji.style.bottom = 'auto';
+                emoji.style.transform = 'translate(0%, -50%)';
+                break;
+              case 'center-right':
+                emoji.style.top = '50%';
+                emoji.style.right = '0px';
+                emoji.style.left = 'auto';
+                emoji.style.bottom = 'auto';
+                emoji.style.transform = 'translate(0%, -50%)';
+                break;
+            }
+            console.log(`🎃 Emoji ${index} (${corner}) moved to corner`);
           });
         }, 2500);
         
-        // Stage 4: Fade out and show main content (4s total)
+        // Stage 4: Enlarge emojis to giant size (4s after start)
         setTimeout(() => {
-          console.log('🎃 Stage 4: Fading out Halloween, showing main content');
+          console.log('🎃 Stage 4: Enlarging emojis to giant size');
+          halloweenEmojis.forEach((emoji, index) => {
+            emoji.classList.add('enlarge-giant');
+            // Force giant size for mobile compatibility
+            const isMobile = window.innerWidth <= 768;
+            const giantSize = isMobile ? '500px' : '600px';
+            emoji.style.fontSize = giantSize;
+            emoji.style.opacity = '0.8';
+            console.log(`🎃 Emoji ${index} enlarged to giant size: ${giantSize}`);
+          });
+        }, 4000);
+        
+        // Stage 5: Fade out and show main content (6.5s total)
+        setTimeout(() => {
+          console.log('🎃 Stage 5: Fading out Halloween, showing main content');
           halloweenLoader.classList.add('fade-out');
           mainContent.classList.add('show');
           
@@ -511,7 +570,7 @@
             }
             console.log('🎃 Halloween animation completed and cleaned up');
           }, 800);
-        }, 4000);
+        }, 6500);
       } else {
         console.log('🎃 Not Halloween 2025 - skipping animation');
       }
