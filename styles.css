@@ -22,15 +22,37 @@ body::before{
   background-attachment:local;
   opacity:0.3;
   z-index:100;
-  pointer-events:auto;
+  pointer-events:none; /* Disable all pointer events on Kiwi itself */
   cursor:pointer;
   transition:opacity 0.3s ease;
   overflow:visible;
   border-radius:50%;
 }
 
-body::before:hover{
-  opacity:0.5;
+/* Disable hover effects on mobile to prevent tooltip conflicts */
+@media (hover: hover) {
+  body::before:hover{
+    opacity:0.5;
+  }
+}
+
+/* Mobile touch improvements for Kiwi */
+@media (max-width: 768px) {
+  body::before {
+    opacity: 0.8; /* More visible on mobile for testing */
+    width: 120px; /* Larger touch target */
+    height: 120px;
+    right: 20px;
+    top: 20px;
+    /* Add a subtle border for debugging */
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  }
+  
+  body::before:active {
+    opacity: 1;
+    transform: scale(1.05);
+    transition: all 0.1s ease;
+  }
 }
 
 /* Celebration ribbon animation */
@@ -500,28 +522,31 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
 
 /* Kiwi Tooltip */
 #kiwiTooltip {
-  display: none;
   position: fixed;
-  bottom: 20px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background: #90EE90;
-  color: #2d3748;
-  padding: 14px 24px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 500;
-  z-index: 10000;
-  pointer-events: none;
-  white-space: normal;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #85d639, #6fb82e);
+  color: white;
+  padding: 15px 20px;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: bold;
   text-align: center;
-  line-height: 1.6;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  border: 3px solid #fff;
+  max-width: 300px;
+  word-wrap: break-word;
 }
 
 #kiwiTooltip.show {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1.05);
 }
 
 .reset-btn:active {
@@ -601,6 +626,18 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   
   .progress-grid {
     grid-template-columns: 1fr;
+  }
+  
+  /* Mobile Kiwi tooltip improvements */
+  #kiwiTooltip {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+    max-width: none;
+    font-size: 13px;
+    padding: 10px 16px;
+    line-height: 1.4;
   }
 }
 

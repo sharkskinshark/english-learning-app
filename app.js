@@ -371,18 +371,12 @@ function checkSpelling() {
   updateProgress(session.level, session.category, correct ? 1 : 0, 1);
 }
 
-// Add event listeners for spelling practice
-listenWordBtn.addEventListener('click', () => {
-  speakWord(currentWord.word);
-});
-
+// Add event listeners for spelling practice (removed duplicates)
 spellingInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     checkSpelling();
   }
 });
-
-submitSpelling.addEventListener('click', checkSpelling);
 
 function updateProgress(level, category, correct, total) {
   const progress = getProgress();
@@ -1053,32 +1047,6 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.warn('⚠️ Reset button not found in DOM');
   }
-
-  // Kiwi Tooltip Functionality
-  const kiwiTooltip = document.getElementById('kiwiTooltip');
-  const bodyElement = document.body;
-
-  bodyElement.addEventListener('mousemove', (e) => {
-    // Check if mouse is over the kiwi area (top right corner)
-    // Kiwi is positioned at: right: 80px, top: 60px, size: 160x160
-    const kiwiRect = {
-      left: window.innerWidth - 80 - 160,  // right edge minus right offset minus width
-      right: window.innerWidth - 80,        // right edge minus right offset
-      top: 60,
-      bottom: 60 + 160                      // top + height
-    };
-
-    const isOverKiwi = e.clientX >= kiwiRect.left && 
-                       e.clientX <= kiwiRect.right && 
-                       e.clientY >= kiwiRect.top && 
-                       e.clientY <= kiwiRect.bottom;
-
-    if (isOverKiwi) {
-      kiwiTooltip.classList.add('show');
-    } else {
-      kiwiTooltip.classList.remove('show');
-    }
-  });
 });
 
 // Update leaderboard on session completion

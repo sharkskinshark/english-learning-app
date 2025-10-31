@@ -177,6 +177,59 @@
   </div>
 
   <!-- Kiwi Tooltip -->
-  <div id="kiwiTooltip">Hey, I'm Kiwi. A Second Grade student in the Elementary School in Taipei City, Taiwan. OCT.2025</div>
+  <div id="kiwiTooltip">Hey, I'm Kiwi! 🥝 Touch anywhere on the screen to see me!</div>
+
+  <script>
+    // Universal touch/click handler for showing Kiwi tooltip
+    function setupKiwiTooltip() {
+      const tooltip = document.getElementById('kiwiTooltip');
+      let tooltipTimeout;
+      
+      function showKiwiTooltip() {
+        // Clear any existing timeout
+        if (tooltipTimeout) {
+          clearTimeout(tooltipTimeout);
+        }
+        
+        // Show tooltip
+        tooltip.classList.add('show');
+        console.log('🥝 Kiwi says hello!');
+        
+        // Auto-hide after 2 seconds
+        tooltipTimeout = setTimeout(() => {
+          tooltip.classList.remove('show');
+          console.log('🥝 Kiwi says goodbye!');
+        }, 2000);
+      }
+      
+      // Listen for any click anywhere on the page
+      document.addEventListener('click', function(e) {
+        // Avoid showing tooltip when clicking UI buttons
+        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
+          return;
+        }
+        showKiwiTooltip();
+      });
+      
+      // Listen for any touch anywhere on the page
+      document.addEventListener('touchstart', function(e) {
+        // Avoid showing tooltip when touching UI elements
+        if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') {
+          return;
+        }
+        showKiwiTooltip();
+      });
+      
+      console.log('🥝 Universal Kiwi tooltip initialized - touch anywhere!');
+    }
+
+    // Initialize when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupKiwiTooltip);
+    } else {
+      setupKiwiTooltip();
+    }
+  </script>
 </body>
+</html>
 </html>
