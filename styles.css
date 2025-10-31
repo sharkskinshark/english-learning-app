@@ -16,11 +16,19 @@
   /* Edge specific fixes */
   -ms-overflow-style: none;
   scrollbar-width: none;
+  /* Don't block pointer events during fade-out */
+  pointer-events: auto;
 }
 
 .halloween-loader.active {
   display: block !important;
   visibility: visible !important;
+}
+
+/* During fade-out, don't block interactions */
+.halloween-loader.fade-out {
+  pointer-events: none !important;
+  z-index: 0 !important; /* Lower z-index during fade */
 }
 
 .halloween-emoji {
@@ -558,12 +566,24 @@ button:active {
   button {
     transition: none !important; /* No transitions on mobile for instant response */
     -webkit-transition: none !important;
+    /* Ensure buttons are above Halloween animation */
+    position: relative !important;
+    z-index: 10000 !important; /* Higher than Halloween loader */
   }
   
   button:active {
     transform: translateZ(0) scale(0.95) !important;
     -webkit-transform: translateZ(0) scale(0.95) !important;
   }
+}
+
+/* Specific fix for Start Practice button on iPhone */
+#startBtn {
+  position: relative !important;
+  z-index: 10001 !important; /* Ensure it's above all overlays */
+  /* Force clickable area */
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: rgba(43, 140, 243, 0.3) !important;
 }
 button:disabled{opacity:0.6}
 .exercise{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(33,49,70,0.06)}

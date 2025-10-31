@@ -552,6 +552,14 @@
         // Stage 1: Fly emojis from corners to center (0.8s)
         setTimeout(() => {
           console.log('🎃 Stage 1: Flying emojis to center');
+          
+          // IMMEDIATE FIX: Disable pointer events after 2 seconds to allow button clicks
+          setTimeout(() => {
+            console.log('🎃 EMERGENCY: Disabling Halloween loader pointer events for button access');
+            halloweenLoader.style.pointerEvents = 'none';
+            halloweenLoader.style.zIndex = '0';
+          }, 2000);
+          
           halloweenEmojis.forEach((emoji, index) => {
             setTimeout(() => {
               emoji.classList.add('fly-in');
