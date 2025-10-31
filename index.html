@@ -234,6 +234,18 @@
         stage2.classList.remove('active');
         console.log('📝 Stage 1 activated, Stage 2 deactivated');
         
+        // Adjust tooltip size for mobile
+        if (isMobile) {
+          const screenWidth = window.innerWidth;
+          const screenHeight = window.innerHeight;
+          console.log('📱 Screen dimensions:', screenWidth, 'x', screenHeight);
+          
+          // Ensure tooltip fits in viewport
+          tooltip.style.maxWidth = (screenWidth * 0.9) + 'px';
+          tooltip.style.maxHeight = (screenHeight * 0.7) + 'px';
+          console.log('📱 Tooltip size adjusted for mobile');
+        }
+        
         // Show tooltip
         tooltip.classList.add('show');
         isTooltipVisible = true;

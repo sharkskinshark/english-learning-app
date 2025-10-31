@@ -617,6 +617,38 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   max-width: 400px;
   line-height: 1.5;
   word-wrap: break-word;
+  /* Ensure it doesn't overflow screen */
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Mobile responsive tooltip */
+@media (max-width: 768px) {
+  #kiwiTooltip {
+    max-width: 90vw;
+    max-height: 70vh;
+    padding: 15px 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 12px;
+    margin: 10px;
+    /* Ensure it stays within screen bounds */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+  #kiwiTooltip {
+    max-width: 95vw;
+    max-height: 75vh;
+    padding: 12px 15px;
+    font-size: 13px;
+    line-height: 1.3;
+    border-radius: 10px;
+  }
 }
 
 #kiwiTooltip.show {
@@ -655,6 +687,31 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
 /* Stage 2 - Instructions */
 #kiwiStage2 {
   text-align: left;
+}
+
+/* Mobile responsive stages */
+@media (max-width: 768px) {
+  #kiwiStage1 {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  
+  #kiwiStage2 {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 480px) {
+  #kiwiStage1 {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+  
+  #kiwiStage2 {
+    font-size: 12px;
+    line-height: 1.3;
+  }
 }
 
 .reset-btn:active {
