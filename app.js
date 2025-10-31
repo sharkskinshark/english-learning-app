@@ -644,6 +644,46 @@ function startSession(){
     };
   }
   exercise.classList.remove('hidden');
+  
+  // iPhone auto-scroll to Listen to Word button
+  const isMobile = window.innerWidth <= 768;
+  const isIPhone = /iPhone/i.test(navigator.userAgent);
+  
+  if (isMobile || isIPhone) {
+    console.log('📱 iPhone detected - preparing auto-scroll to Listen to Word button');
+    
+    // Small delay to ensure DOM is updated after exercise section becomes visible
+    setTimeout(() => {
+      const listenWordBtn = document.getElementById('listenWordBtn');
+      
+      if (listenWordBtn) {
+        console.log('📱 Scrolling to Listen to Word button');
+        
+        // Smooth scroll to center the Listen to Word button on screen
+        listenWordBtn.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'center'
+        });
+        
+        // Alternative method for better iPhone compatibility
+        const buttonRect = listenWordBtn.getBoundingClientRect();
+        const buttonTop = buttonRect.top + window.pageYOffset;
+        const viewportHeight = window.innerHeight;
+        const scrollToPosition = buttonTop - (viewportHeight / 2) + (buttonRect.height / 2);
+        
+        window.scrollTo({
+          top: scrollToPosition,
+          behavior: 'smooth'
+        });
+        
+        console.log('📱 Auto-scroll completed to position:', scrollToPosition);
+      } else {
+        console.log('⚠️ Listen to Word button not found for auto-scroll');
+      }
+    }, 300); // 300ms delay to ensure DOM is ready
+  }
+  
   feedbackEl.textContent = '';
   nextBtn.classList.add('hidden');
   restartBtn.classList.add('hidden');

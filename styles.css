@@ -255,6 +255,12 @@
 
 /* Mobile-specific Halloween optimizations */
 @media (max-width: 768px) {
+  /* Enhanced smooth scrolling for iPhone */
+  html, body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .halloween-emoji {
     font-size: 0px !important;
     -webkit-text-size-adjust: none;
@@ -311,13 +317,14 @@
 
 :root{--bg:#f7fbff;--card:#fff;--accent:#2b8cf3;--ok:#2dbf6e;--bad:#f44336}
 *{box-sizing:border-box;font-family:Segoe UI,Roboto,Arial,sans-serif}
-html{overflow:visible}
+html{overflow:visible;scroll-behavior:smooth}
 body{
   margin:0;
   background:var(--bg);
   color:#213146;
   position:relative;
   overflow:visible;
+  scroll-behavior:smooth;
 }
 /* Create a clickable Kiwi element instead of using ::before */
 .kiwi-character {
