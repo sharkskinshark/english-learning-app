@@ -418,8 +418,9 @@
                          today.getMonth() === 9 && // October is month 9 (0-indexed)
                          today.getDate() === 31;
       
-      // Edge browser detection
+      // Edge browser detection (including mobile Edge)
       const isEdge = /Edge|Edg/i.test(navigator.userAgent);
+      const isMobileEdge = isEdge && (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 768);
       
       console.log('🎃 Halloween check:', {
         date: today.toDateString(),
@@ -429,7 +430,8 @@
         day: today.getDate(),
         userAgent: navigator.userAgent,
         screenSize: window.innerWidth + 'x' + window.innerHeight,
-        isEdge: isEdge
+        isEdge: isEdge,
+        isMobileEdge: isMobileEdge
       });
       
       if (isHalloween) {
@@ -443,7 +445,7 @@
           content: !!mainContent,
           emojis: halloweenEmojis.length,
           text: !!centerText,
-          browser: isEdge ? 'Edge' : 'Other'
+          browser: isEdge ? (isMobileEdge ? 'Mobile Edge' : 'Desktop Edge') : 'Other'
         });
         
         // Show Halloween loader with Edge-specific handling
@@ -460,11 +462,11 @@
         halloweenLoader.style.width = '100vw';
         halloweenLoader.style.height = '100vh';
         
-        // Edge-specific background fix
+        // Edge-specific background fix (including mobile)
         if (isEdge) {
           halloweenLoader.style.background = '#1a1a2e';
           halloweenLoader.style.backgroundColor = '#1a1a2e';
-          console.log('🎃 Edge browser detected - applied background fix');
+          console.log('🎃', isMobileEdge ? 'Mobile Edge' : 'Desktop Edge', 'browser detected - applied background fix');
         }
         
         // Set emoji content with Edge-specific handling
@@ -482,7 +484,7 @@
           console.log(`🎃 Emoji ${index}:`, emojiChar, emoji.textContent);
         });
         
-        console.log('🎃 Halloween animation started on', isEdge ? 'Edge browser!' : 'browser!');
+        console.log('🎃 Halloween animation started on', isEdge ? (isMobileEdge ? 'Mobile Edge browser!' : 'Desktop Edge browser!') : 'browser!');
         
         // Stage 1: Fly emojis from corners to center (0.8s)
         setTimeout(() => {
@@ -492,8 +494,11 @@
               emoji.classList.add('fly-in');
               console.log(`🎃 Emoji ${index} flying in`);
               
-              // Force style for Edge compatibility
-              emoji.style.fontSize = '60px';
+              // Force style for Edge and mobile compatibility
+              const isMobile = window.innerWidth <= 768;
+              const fontSize = isMobile ? '50px' : '60px';
+              
+              emoji.style.fontSize = fontSize;
               emoji.style.opacity = '1';
               emoji.style.top = '50%';
               emoji.style.left = '50%';
@@ -502,12 +507,14 @@
               emoji.style.position = 'absolute';
               emoji.style.zIndex = '10000';
               
-              // Edge-specific transform
+              // Edge-specific transform with mobile support
               if (isEdge) {
                 emoji.style.transform = 'translate(-50%, -50%)';
                 emoji.style.msTransform = 'translate(-50%, -50%)';
+                emoji.style.webkitTransform = 'translate(-50%, -50%)'; // Also add webkit for mobile Edge
               } else {
                 emoji.style.transform = 'translate(-50%, -50%)';
+                emoji.style.webkitTransform = 'translate(-50%, -50%)'; // Mobile Safari/Chrome
               }
             }, index * 150); // Stagger the animations
           });
@@ -527,7 +534,7 @@
             emoji.classList.add('move-to-corner');
             const corner = emoji.getAttribute('data-corner');
             
-            // Set specific corner positions with Edge compatibility
+            // Set specific corner positions with Edge and mobile compatibility
             switch(corner) {
               case 'top-left':
                 emoji.style.top = '0px';
@@ -535,6 +542,7 @@
                 emoji.style.right = 'auto';
                 emoji.style.bottom = 'auto';
                 emoji.style.transform = 'translate(0%, 0%)';
+                emoji.style.webkitTransform = 'translate(0%, 0%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
                 break;
               case 'top-right':
@@ -543,6 +551,7 @@
                 emoji.style.left = 'auto';
                 emoji.style.bottom = 'auto';
                 emoji.style.transform = 'translate(0%, 0%)';
+                emoji.style.webkitTransform = 'translate(0%, 0%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
                 break;
               case 'bottom-left':
@@ -551,6 +560,7 @@
                 emoji.style.top = 'auto';
                 emoji.style.right = 'auto';
                 emoji.style.transform = 'translate(0%, 0%)';
+                emoji.style.webkitTransform = 'translate(0%, 0%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
                 break;
               case 'bottom-right':
@@ -559,6 +569,7 @@
                 emoji.style.top = 'auto';
                 emoji.style.left = 'auto';
                 emoji.style.transform = 'translate(0%, 0%)';
+                emoji.style.webkitTransform = 'translate(0%, 0%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, 0%)';
                 break;
               case 'center-left':
@@ -567,6 +578,7 @@
                 emoji.style.right = 'auto';
                 emoji.style.bottom = 'auto';
                 emoji.style.transform = 'translate(0%, -50%)';
+                emoji.style.webkitTransform = 'translate(0%, -50%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
                 break;
               case 'center-right':
@@ -575,6 +587,7 @@
                 emoji.style.left = 'auto';
                 emoji.style.bottom = 'auto';
                 emoji.style.transform = 'translate(0%, -50%)';
+                emoji.style.webkitTransform = 'translate(0%, -50%)';
                 if (isEdge) emoji.style.msTransform = 'translate(0%, -50%)';
                 break;
             }
@@ -587,12 +600,20 @@
           console.log('🎃 Stage 4: Enlarging emojis to giant size');
           halloweenEmojis.forEach((emoji, index) => {
             emoji.classList.add('enlarge-giant');
-            // Force giant size for mobile compatibility
+            // Force giant size for mobile and Edge compatibility
             const isMobile = window.innerWidth <= 768;
             const giantSize = isMobile ? '500px' : '600px';
             emoji.style.fontSize = giantSize;
             emoji.style.opacity = '0.8';
-            console.log(`🎃 Emoji ${index} enlarged to giant size: ${giantSize}`);
+            
+            // Ensure transforms are applied for all browsers
+            const currentTransform = emoji.style.transform;
+            emoji.style.webkitTransform = currentTransform;
+            if (isEdge) {
+              emoji.style.msTransform = currentTransform;
+            }
+            
+            console.log(`🎃 Emoji ${index} enlarged to giant size: ${giantSize} (Mobile: ${isMobile}, Edge: ${isEdge})`);
           });
         }, 4000);
         
