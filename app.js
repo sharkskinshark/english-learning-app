@@ -654,24 +654,24 @@ function startSession(){
   
   if (isMobile || isIPhone) {
     const browserType = isSafari ? 'Safari' : (isEdge ? 'Edge' : (isChrome ? 'Chrome' : 'Unknown'));
-    console.log(`📱 iPhone ${browserType} detected - preparing auto-scroll to Listen to Word button`);
+    console.log(`📱 iPhone ${browserType} detected - preparing auto-scroll to input box "Type what you hear..."`);
     
     // Small delay to ensure DOM is updated after exercise section becomes visible
     setTimeout(() => {
-      const listenWordBtn = document.getElementById('listenWordBtn');
+      const spellingInput = document.getElementById('spellingInput');
       
-      if (listenWordBtn) {
-        console.log(`📱 Scrolling to Listen to Word button on iPhone ${browserType}`);
+      if (spellingInput) {
+        console.log(`📱 Scrolling to input box on iPhone ${browserType}`);
         
         // Method 1: Modern scrollIntoView (Safari, Chrome)
         if (isSafari || isChrome) {
           try {
-            listenWordBtn.scrollIntoView({
+            spellingInput.scrollIntoView({
               behavior: 'smooth',
               block: 'center',
               inline: 'center'
             });
-            console.log(`📱 ${browserType}: Used scrollIntoView method`);
+            console.log(`📱 ${browserType}: Used scrollIntoView method for input box`);
           } catch (e) {
             console.log(`📱 ${browserType}: scrollIntoView failed, using fallback`);
           }
@@ -679,10 +679,10 @@ function startSession(){
         
         // Method 2: Manual calculation (Better for Edge, fallback for all)
         setTimeout(() => {
-          const buttonRect = listenWordBtn.getBoundingClientRect();
-          const buttonTop = buttonRect.top + window.pageYOffset;
+          const inputRect = spellingInput.getBoundingClientRect();
+          const inputTop = inputRect.top + window.pageYOffset;
           const viewportHeight = window.innerHeight;
-          const scrollToPosition = buttonTop - (viewportHeight / 2) + (buttonRect.height / 2);
+          const scrollToPosition = inputTop - (viewportHeight / 2) + (inputRect.height / 2);
           
           // Enhanced scrolling with browser-specific optimizations
           if (isEdge) {
@@ -691,39 +691,39 @@ function startSession(){
               top: scrollToPosition,
               behavior: 'smooth'
             });
-            console.log(`📱 Edge: Used manual scroll to position:`, scrollToPosition);
+            console.log(`📱 Edge: Used manual scroll to input position:`, scrollToPosition);
           } else if (isSafari) {
             // Safari iOS - use both methods for reliability
             window.scrollTo({
               top: scrollToPosition,
               behavior: 'smooth'
             });
-            console.log(`📱 Safari: Used enhanced scroll to position:`, scrollToPosition);
+            console.log(`📱 Safari: Used enhanced scroll to input position:`, scrollToPosition);
           } else if (isChrome) {
             // Chrome on iPhone - prefer smooth scrolling
             window.scrollTo({
               top: scrollToPosition,
               behavior: 'smooth'
             });
-            console.log(`📱 Chrome: Used smooth scroll to position:`, scrollToPosition);
+            console.log(`📱 Chrome: Used smooth scroll to input position:`, scrollToPosition);
           } else {
             // Fallback for any other browser
             window.scrollTo({
               top: scrollToPosition,
               behavior: 'smooth'
             });
-            console.log(`📱 Fallback: Used scroll to position:`, scrollToPosition);
+            console.log(`📱 Fallback: Used scroll to input position:`, scrollToPosition);
           }
           
           // Additional verification for iPhone browsers
           setTimeout(() => {
             const currentScroll = window.pageYOffset;
             const targetReached = Math.abs(currentScroll - scrollToPosition) < 50;
-            console.log(`📱 ${browserType}: Scroll verification - Target: ${scrollToPosition}, Current: ${currentScroll}, Success: ${targetReached}`);
+            console.log(`📱 ${browserType}: Input scroll verification - Target: ${scrollToPosition}, Current: ${currentScroll}, Success: ${targetReached}`);
             
             // Final fallback if scroll didn't work
             if (!targetReached) {
-              console.log(`📱 ${browserType}: Applying final fallback scroll`);
+              console.log(`📱 ${browserType}: Applying final fallback scroll to input`);
               window.scrollTo(0, scrollToPosition);
             }
           }, 800);
@@ -731,7 +731,7 @@ function startSession(){
         }, 100); // Secondary delay for Edge compatibility
         
       } else {
-        console.log('⚠️ Listen to Word button not found for auto-scroll');
+        console.log('⚠️ Spelling input box not found for auto-scroll');
       }
     }, 300); // Primary delay to ensure DOM is ready
   }
@@ -956,13 +956,42 @@ startBtn.addEventListener('click', ()=>{
   if(!vocab || Object.keys(vocab).length===0){
     promptEl.textContent = 'Vocabulary not loaded yet.';return
   }
+  
+  // Add enlarge animation for iPhone when using click events
+  const isMobile = window.innerWidth <= 768;
+  const isIPhone = /iPhone/i.test(navigator.userAgent);
+  
+  if (isMobile || isIPhone) {
+    console.log('📱 Adding button enlarge animation (click event)');
+    startBtn.classList.add('button-enlarge');
+    
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      startBtn.classList.remove('button-enlarge');
+    }, 300); // Match animation duration
+  }
+  
   startSession();
 });
 
-// Enhanced iPhone touch support for Start Practice button
+// Enhanced iPhone touch support for Start Practice button with enlarge animation
 startBtn.addEventListener('touchstart', function(e) {
   console.log('📱 Start button touch started');
   e.preventDefault();
+  
+  // Add enlarge animation class for iPhone visual feedback
+  const isMobile = window.innerWidth <= 768;
+  const isIPhone = /iPhone/i.test(navigator.userAgent);
+  
+  if (isMobile || isIPhone) {
+    console.log('📱 Adding button enlarge animation');
+    startBtn.classList.add('button-enlarge');
+    
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      startBtn.classList.remove('button-enlarge');
+    }, 300); // Match animation duration
+  }
 }, { passive: false });
 
 startBtn.addEventListener('touchend', function(e) {
@@ -976,7 +1005,7 @@ startBtn.addEventListener('touchend', function(e) {
   }
   
   if (!startBtn.disabled) {
-    console.log('📱 Starting session via touch');
+    console.log('📱 Starting session via touch with enlarge animation');
     startSession();
   }
 }, { passive: false });

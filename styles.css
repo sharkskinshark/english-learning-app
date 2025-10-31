@@ -557,6 +557,25 @@ button:disabled{opacity:0.6}
   border-radius: 6px;
   width: 60%;
   font-size: 1rem;
+  /* Enhanced iPhone centering and scroll positioning */
+  scroll-margin-top: 80px; /* Better centering offset */
+  -webkit-scroll-margin-top: 80px; /* Safari iOS */
+  scroll-margin-bottom: 80px; /* Ensure space below */
+  -webkit-scroll-margin-bottom: 80px; /* Safari iOS */
+  /* iPhone input optimizations */
+  -webkit-appearance: none; /* Remove Safari default styling */
+  appearance: none; /* Standard property */
+  -webkit-tap-highlight-color: rgba(43, 140, 243, 0.2); /* Custom tap highlight */
+  outline: none; /* Remove default focus outline */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Enhanced focus state for iPhone visibility */
+#spellingInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43, 140, 243, 0.1);
+  -webkit-box-shadow: 0 0 0 3px rgba(43, 140, 243, 0.1);
 }
 
 .word-image {
@@ -708,6 +727,52 @@ button:disabled{opacity:0.6}
 @keyframes slideIn{
   from{transform:translateX(100%)}
   to{transform:translateX(0)}
+}
+
+/* iPhone button enlarge animation for responsive feedback */
+@keyframes buttonEnlarge {
+  0% { 
+    transform: scale(1); 
+    box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3); 
+  }
+  50% { 
+    transform: scale(1.15); 
+    box-shadow: 0 4px 20px rgba(43, 140, 243, 0.5); 
+  }
+  100% { 
+    transform: scale(1); 
+    box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3); 
+  }
+}
+
+/* Cross-browser keyframes for button enlarge */
+@-webkit-keyframes buttonEnlarge {
+  0% { 
+    -webkit-transform: scale(1); 
+    transform: scale(1);
+    -webkit-box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3);
+    box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3); 
+  }
+  50% { 
+    -webkit-transform: scale(1.15); 
+    transform: scale(1.15);
+    -webkit-box-shadow: 0 4px 20px rgba(43, 140, 243, 0.5);
+    box-shadow: 0 4px 20px rgba(43, 140, 243, 0.5); 
+  }
+  100% { 
+    -webkit-transform: scale(1); 
+    transform: scale(1);
+    -webkit-box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3);
+    box-shadow: 0 2px 8px rgba(43, 140, 243, 0.3); 
+  }
+}
+
+/* Button enlarge animation class */
+.button-enlarge {
+  animation: buttonEnlarge 0.3s ease-out !important;
+  -webkit-animation: buttonEnlarge 0.3s ease-out !important;
+  -moz-animation: buttonEnlarge 0.3s ease-out !important;
+  -ms-animation: buttonEnlarge 0.3s ease-out !important;
 }
 
 footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
@@ -1321,6 +1386,34 @@ input, textarea, select, button {
     border: 1px solid transparent; /* Improve Edge rendering */
     position: relative; /* Better layering */
     z-index: 1; /* Ensure clickability */
+  }
+  
+  /* Enhanced input styling for iPhone 16 Pro centering */
+  #spellingInput {
+    width: 85% !important; /* Better width for iPhone 16 Pro */
+    min-height: 44px; /* Apple's recommended touch target */
+    font-size: 16px; /* Prevent zoom on Safari */
+    padding: 12px 16px; /* Better touch area */
+    border: 2px solid #d6e6fb; /* More visible border */
+    border-radius: 8px; /* Rounded corners for iPhone */
+    text-align: center; /* Center the text input */
+    /* Enhanced scroll positioning for perfect centering */
+    scroll-margin-top: 120px; /* More space above for iPhone 16 Pro */
+    -webkit-scroll-margin-top: 120px; /* Safari iOS */
+    scroll-margin-bottom: 120px; /* More space below */
+    -webkit-scroll-margin-bottom: 120px; /* Safari iOS */
+    /* Hardware acceleration for smooth scrolling */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Enhanced focus state for iPhone 16 Pro */
+  #spellingInput:focus {
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(43, 140, 243, 0.15) !important;
+    -webkit-box-shadow: 0 0 0 4px rgba(43, 140, 243, 0.15) !important;
+    outline: none !important;
   }
   
   /* Ensure smooth scrolling works on all iPhone browsers */
