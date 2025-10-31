@@ -228,12 +228,12 @@
         isTooltipVisible = true;
         console.log('🥝 Stage 1: Personal message shown');
         
-        // Transition to stage 2 after 2 seconds
+        // Transition to stage 2 after 3 seconds
         stageTimeout = setTimeout(() => {
           stage1.classList.remove('active');
           stage2.classList.add('active');
           console.log('🥝 Stage 2: Instructions shown');
-        }, 2000);
+        }, 3000);
       }
       
       function hideKiwiTooltip() {
