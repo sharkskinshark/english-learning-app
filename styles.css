@@ -327,6 +327,8 @@
 
 :root{--bg:#f7fbff;--card:#fff;--accent:#2b8cf3;--ok:#2dbf6e;--bad:#f44336}
 *{box-sizing:border-box;font-family:Segoe UI,Roboto,Arial,sans-serif}
+/* ========== TWO-LAYER DESIGN SYSTEM ========== */
+/* LAYER 1 (BOTTOM): Main content that scrolls normally */
 html{
   overflow:visible;
   scroll-behavior:smooth;
@@ -338,7 +340,7 @@ body{
   margin:0;
   background:var(--bg);
   color:#213146;
-  position:relative;
+  position:relative; /* Scrolling layer foundation */
   overflow:visible;
   scroll-behavior:smooth;
   -webkit-scroll-behavior:smooth; /* Safari iOS */
@@ -348,10 +350,13 @@ body{
   -webkit-overflow-scrolling:touch;
   -webkit-transform:translateZ(0); /* Hardware acceleration */
   transform:translateZ(0);
+  /* Base z-index for all scrolling content */
+  z-index: 1;
 }
-/* Create a clickable Kiwi element instead of using ::before */
+/* LAYER 2 (TOP): Fixed floating elements - Kiwi character stays in same position */
+/* Create a clickable Kiwi element instead of using ::before - Enhanced floating */
 .kiwi-character {
-  position: fixed;
+  position: fixed; /* FIXED LAYER - Always on top, never scrolls */
   top: 60px;
   right: 30px;
   width: 152px;
@@ -361,14 +366,44 @@ body{
   background-repeat: no-repeat;
   background-position: center;
   opacity: 1;
-  z-index: 1000;
+  z-index: 9999; /* TOP LAYER - Above all scrolling content */
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 50%;
   pointer-events: auto;
+  /* Hardware acceleration for smooth floating during scroll */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+  /* Enhanced floating layer styling */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  isolation: isolate; /* Creates new stacking context */
 }
 
-/* Heartbeat animation keyframes */
+/* Floating animation during scroll */
+@keyframes floatGlow {
+  0% {
+    box-shadow: 0 4px 15px rgba(133, 214, 57, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(133, 214, 57, 0.5);
+  }
+  100% {
+    box-shadow: 0 4px 15px rgba(133, 214, 57, 0.3);
+  }
+}
+
+/* Enhanced Kiwi floating state */
+.kiwi-character.floating {
+  animation: floatGlow 2s ease-in-out infinite;
+}
+
+/* Enhanced tooltip floating state */
+#kiwiTooltip.floating {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(133, 214, 57, 0.3);
+}
 @keyframes heartbeat {
   0% {
     transform: scale(1);
@@ -1060,9 +1095,10 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   box-shadow: 0 4px 12px rgba(255, 82, 82, 0.4);
 }
 
-/* Kiwi Tooltip - Enhanced for perfect VIEWPORT centering across all devices */
+/* LAYER 2 (TOP): Fixed floating tooltip - Green text box stays in same position */
+/* Kiwi Tooltip - Enhanced for perfect VIEWPORT centering across all devices with hardware acceleration */
 #kiwiTooltip {
-  position: fixed !important;
+  position: fixed !important; /* FIXED LAYER - Always on top, never scrolls */
   /* Center in VISIBLE viewport, not entire page */
   top: 50vh !important;
   left: 50vw !important;
@@ -1076,8 +1112,8 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   font-size: 16px;
   font-weight: 500;
   text-align: left;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  z-index: 1001 !important;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+  z-index: 10000 !important; /* HIGHEST LAYER - Above everything including Kiwi */
   opacity: 0;
   visibility: hidden;
   border: 3px solid #fff;
@@ -1088,6 +1124,13 @@ footer.notes{margin-top:12px;color:#657786;font-size:0.9rem}
   /* Only add scroll for long content */
   max-height: none;
   overflow: visible;
+  /* Hardware acceleration for smooth floating during scroll */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  /* Enhanced floating layer styling */
+  isolation: isolate; /* Creates new stacking context */
 }
 
 /* Mobile responsive tooltip - VIEWPORT centered */

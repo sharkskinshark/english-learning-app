@@ -41,3 +41,4 @@ test-vocab.html
 # Documentation (internal use)
 SECURITY_AUDIT.md
 DEPLOYMENT_SECURITY.md
+.vercel

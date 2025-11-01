@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiwi Floating Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            /* Create long content to test scrolling */
+            height: 300vh;
+            background: linear-gradient(to bottom, #f0f8ff, #e6f3ff, #cce7ff);
+        }
+        
+        .content {
+            padding: 50px;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Test Kiwi character floating */
+        .test-kiwi {
+            position: fixed;
+            top: 60px;
+            right: 30px;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #85d639, #6fb82e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: translateZ(0); /* Hardware acceleration */
+            backface-visibility: hidden;
+        }
+        
+        .test-kiwi:hover {
+            transform: scale(1.1) translateZ(0);
+        }
+        
+        /* Test tooltip floating */
+        .test-tooltip {
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #85d639, #6fb82e);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            font-size: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            border: 3px solid #fff;
+            max-width: 400px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+            backface-visibility: hidden;
+        }
+        
+        .test-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .test-kiwi {
+                width: 100px;
+                height: 100px;
+                right: 20px;
+                top: 20px;
+                font-size: 32px;
+            }
+            
+            .test-tooltip {
+                max-width: calc(100vw - 30px);
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-indicator">Scroll to test floating behavior ↕️</div>
+    
+    <div class="test-kiwi" onclick="toggleTooltip()">🥝</div>
+    
+    <div class="test-tooltip" id="testTooltip">
+        <strong>Floating Test</strong><br>
+        This tooltip should remain centered in your viewport while scrolling.<br>
+        Click the Kiwi again to close.
+    </div>
+    
+    <div class="content">
+        <h1>Scroll Test Page</h1>
+        <p>This page tests the floating behavior of the Kiwi character and tooltip.</p>
+        <p><strong>Test Instructions:</strong></p>
+        <ol>
+            <li>Click the green Kiwi (🥝) in the top-right corner</li>
+            <li>The green tooltip should appear centered in your viewport</li>
+            <li>Scroll up and down while the tooltip is visible</li>
+            <li>Both the Kiwi and tooltip should "float" and stay in the same position relative to your screen</li>
+            <li>Click the Kiwi again to close the tooltip</li>
+        </ol>
+    </div>
+    
+    <div class="content">
+        <h2>Content Section 1</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    
+    <div class="content">
+        <h2>Content Section 2</h2>
+        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+    
+    <div class="content">
+        <h2>Content Section 3</h2>
+        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+        <p>Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt.</p>
+    </div>
+    
+    <div class="content">
+        <h2>Content Section 4</h2>
+        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum.</p>
+        <p>Deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+    </div>
+    
+    <div class="content">
+        <h2>Content Section 5</h2>
+        <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+        <p>Et harum quidem rerum facilis est et expedita distinctio nam libero tempore.</p>
+    </div>
+
+    <script>
+        let tooltipVisible = false;
+        
+        function toggleTooltip() {
+            const tooltip = document.getElementById('testTooltip');
+            tooltipVisible = !tooltipVisible;
+            
+            if (tooltipVisible) {
+                tooltip.classList.add('show');
+                console.log('✅ Tooltip shown - should remain centered while scrolling');
+            } else {
+                tooltip.classList.remove('show');
+                console.log('❌ Tooltip hidden');
+            }
+        }
+        
+        // Add scroll listener to show current scroll position
+        window.addEventListener('scroll', function() {
+            if (tooltipVisible) {
+                console.log('📍 Scrolling - tooltip should stay centered at viewport');
+            }
+        });
+        
+        console.log('🥝 Kiwi floating test page loaded');
+        console.log('📱 Click the Kiwi to test floating behavior');
+    </script>
+</body>
+</html>

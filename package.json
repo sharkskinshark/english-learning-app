@@ -1,0 +1,35 @@
+{
+  "name": "english-learning-app",
+  "version": "1.0.0",
+  "description": "Interactive English vocabulary learning app with Cambridge vocabulary, Kiwi character, and Halloween animations",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static HTML app - no build needed'",
+    "start": "npx serve .",
+    "validate": "python validate_vocab.py",
+    "check-alignment": "python check_alignment.py"
+  },
+  "keywords": [
+    "english",
+    "vocabulary",
+    "learning",
+    "education",
+    "cambridge",
+    "interactive",
+    "mobile-friendly"
+  ],
+  "author": "sharkskinshark",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sharkskinshark/english-learning-app.git"
+  },
+  "homepage": "https://github.com/sharkskinshark/english-learning-app#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
