@@ -1,13 +1,5 @@
 {
   "version": 2,
-  "public": true,
-  "outputDirectory": "./",
-  "analytics": {
-    "enable": true
-  },
-  "speedInsights": {
-    "enable": true
-  },
   "headers": [
     {
       "source": "/(.*)",
