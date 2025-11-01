@@ -3,27 +3,30 @@ let session = { words: [], index: 0, score: 0, level: '', category: '' };
 let currentWord = '';
 const synth = window.speechSynthesis;
 
-// Preferred British female voice matching - optimized for all browsers
-// IMPORTANT: Moira (Apple voice) is first for iOS devices
+// Preferred British female voice matching - optimized for human-like voices on iPad/iPhone
+// IMPORTANT: Moira (Apple voice) is first for iOS devices - most human-like
 const VOICE_PREFERENCES = [
-  // iOS/macOS - Apple voices (FIRST PRIORITY - highest quality on Apple devices)
-  'Moira',      // PRIMARY: British female (iOS/macOS - highly natural)
-  'Victoria',   // British female (iOS - natural)
+  // iOS/macOS - Apple voices (FIRST PRIORITY - highest quality and most human-like on Apple devices)
+  'Moira',      // PRIMARY: British female (iOS/macOS - highly natural and human-like)
+  'Victoria',   // British female (iOS - natural and clear)
   'Fiona',      // British female (macOS - natural)
-  'Ellen',      // English female
-  'Samantha',   // English female
-  // Windows/Edge/Chrome - Microsoft Natural voices
+  'Serena',     // British female (iOS - premium quality)
+  'Kate',       // British female (iOS - clear pronunciation)
+  'Ellen',      // English female (iOS)
+  'Samantha',   // English female (iOS - fallback)
+  // Windows/Edge/Chrome - Microsoft Natural voices (human-like)
   'Microsoft Sonia Online (Natural)',
-  'Microsoft Libby Online (Natural)',
+  'Microsoft Libby Online (Natural)', 
   'Microsoft Olivia Online (Natural)',
   'Microsoft Hazel',
   'Microsoft Zira Online (Natural)',
-  // Google voices
+  // Google voices (good quality)
   'Google UK English Female',
   'Google UK English',
-  // Fallbacks
+  // Fallbacks for other systems
   'en-GB female',
-  'English Female'
+  'English Female',
+  'English (United Kingdom)'
 ];
 
 function pickBritishFemaleVoice() {
@@ -165,11 +168,27 @@ function speakWord(word) {
   }
 
   const utterance = new SpeechSynthesisUtterance(word);
-  // Natural-sounding British settings optimized for all devices
+  
+  // Enhanced settings for iPad/iPhone with human-like British female voice
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
+  
   utterance.lang = 'en-GB';
-  utterance.rate = 0.85;    // slightly slower for clarity and naturalness
-  utterance.pitch = 1.1;    // moderate pitch lift for youthful female voice
-  utterance.volume = 1.0;   // full volume
+  
+  // Optimized for human-like, steady and gentle speech on mobile devices
+  if (isIOS) {
+    utterance.rate = 0.75;    // Slower and more steady for iOS
+    utterance.pitch = 1.0;    // Natural female pitch for iOS Moira voice
+    utterance.volume = 0.9;   // Slightly softer volume
+  } else if (isMobile) {
+    utterance.rate = 0.8;     // Steady pace for Android
+    utterance.pitch = 1.05;   // Gentle female pitch
+    utterance.volume = 0.95;  // Clear but gentle volume
+  } else {
+    utterance.rate = 0.85;    // Desktop default
+    utterance.pitch = 1.1;    // Desktop default
+    utterance.volume = 1.0;   // Desktop default
+  }
 
   const assignVoiceAndSpeak = () => {
     const voice = pickBritishFemaleVoice();
@@ -294,17 +313,45 @@ function chunkForSounding(word){
 function speakSoundOut(word){
   const chunks = chunkForSounding(word);
   let i = 0;
+  
+  // Enhanced settings for steady, gentle phonics pronunciation on iPad/iPhone
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
+  
   const speakNext = () => {
-    if (i >= chunks.length) { setTimeout(() => speakWord(word), 250); return; }
+    if (i >= chunks.length) { setTimeout(() => speakWord(word), 400); return; }
+    
     const u = new SpeechSynthesisUtterance(chunks[i].replace(/[()]/g,''));
     u.lang = 'en-GB';
-    u.rate = 0.8;
-    u.pitch = 1.05;
+    
+    // Optimized phonics settings for human-like, steady pronunciation
+    if (isIOS) {
+      u.rate = 0.65;      // Very steady and deliberate for iOS phonics
+      u.pitch = 0.95;     // Slightly lower, more natural pitch for phonics
+      u.volume = 0.85;    // Gentle volume for iOS
+    } else if (isMobile) {
+      u.rate = 0.7;       // Steady pace for Android phonics
+      u.pitch = 1.0;      // Natural pitch for phonics
+      u.volume = 0.9;     // Clear but gentle volume
+    } else {
+      u.rate = 0.75;      // Desktop phonics pace
+      u.pitch = 1.05;     // Desktop phonics pitch
+      u.volume = 0.95;    // Desktop phonics volume
+    }
+    
     const v = pickBritishFemaleVoice();
     if (v) u.voice = v;
-    u.onend = () => { i++; setTimeout(speakNext, 80); };
+    
+    u.onend = () => { 
+      i++; 
+      // Longer pause between phonics chunks for better learning
+      const pauseTime = isIOS ? 150 : (isMobile ? 120 : 100);
+      setTimeout(speakNext, pauseTime); 
+    };
+    
     try { synth.speak(u); } catch { /* ignore */ }
   };
+  
   try { synth.cancel(); } catch {}
   speakNext();
 }
