@@ -29,6 +29,9 @@
   "engines": {
     "node": ">=16.0.0"
   },
+  "dependencies": {
+    "@vercel/analytics": "^1.1.1"
+  },
   "devDependencies": {
     "serve": "^14.2.1"
   }

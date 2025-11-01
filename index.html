@@ -15,38 +15,52 @@
   </style>
   <title>Cambridge Vocabulary Practice</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Vercel Speed Insights for vanilla HTML/JS apps -->
+  <!-- Vercel Speed Insights - Updated implementation -->
   <script>
-    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
-  <script defer src="/_vercel/speed-insights/script.js"></script>
-  <!-- Alternative CDN version for GitHub Pages compatibility -->
-  <script defer src="https://va.vercel-scripts.com/v1/speed-insights/script.js"></script>
-  <!-- Custom performance tracking for GitHub Pages -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <!-- Enhanced performance tracking with correct Vercel Analytics -->
   <script>
-    // Track Core Web Vitals manually
+    // Track Core Web Vitals and Vercel Analytics
     function trackWebVitals() {
       // Track page load time
       window.addEventListener('load', () => {
         const loadTime = performance.now();
         console.log('📊 Page Load Time:', Math.round(loadTime), 'ms');
         
-        // Track if Speed Insights is working
-        if (window.si) {
-          console.log('✅ Vercel Speed Insights loaded');
-          // Send a test event to Speed Insights
-          window.si('event', 'page_view', {
+        // Check if Vercel Analytics is working
+        if (window.va) {
+          console.log('✅ Vercel Analytics loaded');
+          // Track page view with device info
+          window.va('event', 'page_view', {
             device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+            loadTime: Math.round(loadTime),
             timestamp: new Date().toISOString()
           });
         } else {
-          console.log('⚠️ Speed Insights not available');
+          console.log('⚠️ Vercel Analytics not available');
         }
         
         // Track device type for debugging
         const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
         console.log('📱 Device Type:', isMobile ? 'Mobile' : 'Desktop');
         console.log('🌐 User Agent:', navigator.userAgent);
+        
+        // Track Core Web Vitals manually if available
+        if ('web-vital' in window) {
+          console.log('📈 Core Web Vitals tracking enabled');
+        }
+      });
+      
+      // Track interactions for mobile specifically
+      document.addEventListener('click', function(e) {
+        if (window.va && /Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) {
+          window.va('event', 'mobile_click', {
+            element: e.target.tagName,
+            timestamp: new Date().toISOString()
+          });
+        }
       });
     }
     
