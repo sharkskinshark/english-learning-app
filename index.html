@@ -15,53 +15,104 @@
   </style>
   <title>Cambridge Vocabulary Practice</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Vercel Speed Insights - Updated implementation -->
+  <!-- Vercel Speed Insights - Latest working implementation -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
-  <!-- Enhanced performance tracking with correct Vercel Analytics -->
+  <!-- Alternative: Vercel Web Analytics (newer approach) -->
   <script>
-    // Track Core Web Vitals and Vercel Analytics
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <!-- Enhanced performance tracking with manual Core Web Vitals -->
+  <script>
+    // Manual Core Web Vitals tracking for Vercel Speed Insights
     function trackWebVitals() {
       // Track page load time
       window.addEventListener('load', () => {
         const loadTime = performance.now();
         console.log('📊 Page Load Time:', Math.round(loadTime), 'ms');
         
-        // Check if Vercel Analytics is working
+        // Manual LCP tracking
+        if ('PerformanceObserver' in window) {
+          const observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              if (entry.entryType === 'largest-contentful-paint') {
+                console.log('📈 LCP:', Math.round(entry.startTime), 'ms');
+                // Send to Vercel if available
+                if (window.va) {
+                  window.va('event', 'Web Vital', {
+                    name: 'LCP',
+                    value: Math.round(entry.startTime),
+                    id: 'lcp-' + Math.random().toString(36).substr(2, 9)
+                  });
+                }
+              }
+            }
+          });
+          observer.observe({ entryTypes: ['largest-contentful-paint'] });
+        }
+        
+        // Check Analytics and Speed Insights
         if (window.va) {
           console.log('✅ Vercel Analytics loaded');
-          // Track page view with device info
           window.va('event', 'page_view', {
             device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop',
             loadTime: Math.round(loadTime),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            url: window.location.href
           });
         } else {
           console.log('⚠️ Vercel Analytics not available');
+        }
+
+        if (window.si) {
+          console.log('✅ Vercel Speed Insights loaded');
+          window.si('event', 'page_load', {
+            device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+            loadTime: Math.round(loadTime)
+          });
+        } else {
+          console.log('⚠️ Vercel Speed Insights not available');
         }
         
         // Track device type for debugging
         const isMobile = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent);
         console.log('📱 Device Type:', isMobile ? 'Mobile' : 'Desktop');
         console.log('🌐 User Agent:', navigator.userAgent);
-        
-        // Track Core Web Vitals manually if available
-        if ('web-vital' in window) {
-          console.log('📈 Core Web Vitals tracking enabled');
-        }
+        console.log('� Current URL:', window.location.href);
       });
       
       // Track interactions for mobile specifically
+      let interactionCount = 0;
       document.addEventListener('click', function(e) {
+        interactionCount++;
         if (window.va && /Mobile|Android|iPhone|iPad/.test(navigator.userAgent)) {
-          window.va('event', 'mobile_click', {
+          window.va('event', 'mobile_interaction', {
             element: e.target.tagName,
+            count: interactionCount,
             timestamp: new Date().toISOString()
           });
         }
+        if (window.si) {
+          window.si('event', 'interaction', {
+            type: 'click',
+            element: e.target.tagName
+          });
+        }
       });
+
+      // Force send data after 5 seconds
+      setTimeout(() => {
+        if (window.va) {
+          window.va('event', 'session_active', {
+            duration: 5000,
+            device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop'
+          });
+        }
+        console.log('📊 Forced session tracking sent');
+      }, 5000);
     }
     
     if (document.readyState === 'loading') {
